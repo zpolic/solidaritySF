@@ -15,7 +15,7 @@ Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku na
 
 # Proces instalacije projekta
 
-1. Klonirajte projekt
+1. Klonirajte projekat
 ```bash
 $ git clone https://github.com/IT-Srbija-Org/solidaritySF; cd solidaritySF;
 ```
