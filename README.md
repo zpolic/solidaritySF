@@ -22,7 +22,7 @@ $ git clone https://github.com/IT-Srbija-Org/solidaritySF; cd solidaritySF;
 
 2. Pokrenite script za instalaciju
 ```bash
-$ ./configureLocalProject.sh
+$ ./configureProject.sh
 ```
 
 3. Otvorite URL adresu u pretraživaču: http://localhost:1000
