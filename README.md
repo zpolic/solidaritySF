@@ -6,7 +6,7 @@ Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku na
 # Tehnologije
  - [PHP 8.3](https://www.php.net/)
  - [NGINX](https://nginx.org/)
- - [MySQL](https://www.mysql.com/)
+ - [MySQL 8](https://www.mysql.com/)
  - [Docker](https://www.docker.com/)
  - [Symfony 6.4](https://symfony.com/)
  - [TailwindCSS 4](https://tailwindcss.com/)
