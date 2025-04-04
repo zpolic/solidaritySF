@@ -30,4 +30,14 @@ $ docker compose up -d;
 $ docker exec solidarity-php-container php composer.phar install;
 ```
 
-4. Otvorite URL adresu u pretraživaču: http://localhost:1000
+4. Kreiranje baze
+```bash
+$ docker exec solidarity-php-container php bin/console doctrine:database:create;
+```
+
+5. Kreiranje tabela
+```bash
+$ docker exec solidarity-php-container php bin/console doctrine:schema:update --force;
+```
+
+6. Otvorite URL adresu u pretraživaču: http://localhost:1000
