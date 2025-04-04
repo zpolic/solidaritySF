@@ -1,6 +1,8 @@
 # Mreža Solidarnosti
 Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku nastavnicima i vannastavnom osoblju čija je plata umanjena zbog obustave rada.
 
+![image.jpg](https://raw.githubusercontent.com/IT-Srbija-Org/solidaritySF/refs/heads/main/public/image/readme.png)
+
 # Tehnologije
  - [PHP 8.3](https://www.php.net/)
  - [NGINX](https://nginx.org/)
