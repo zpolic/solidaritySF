@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="sr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{% block title %}Mreža Solidarnosti - IT Srbija{% endblock %}</title>
+
+        <meta name="title" content="{{ block('title') }}">
+        <meta name="description" content="Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku nastavnicima i vannastavnom osoblju čija je plata umanjena zbog obustave rada. Pridruži se, doniraj i podrži one koji se bore za bolje obrazovanje!">
+        <meta name="keywords" content="Mreža solidarnosti, IT Srbija, prosveta, donacije, podrška nastavnicima, solidarnost, pomoć nastavnicima, obustava rada, direktna podrška">
+
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://mrezasolidarnosti.org/">
+        <meta property="og:title" content="{{ block('title') }}">
+        <meta property="og:description" content="Direktna podrška nastavnicima čija je plata umanjena zbog obustave rada. Uključi se, doniraj, podrži solidarnost u prosveti!">
+        <meta property="og:image" content="{{ absolute_url(asset('image/social.webp')) }}">
+
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://mrezasolidarnosti.org/">
+        <meta property="twitter:title" content="{{ block('title') }}">
+        <meta property="twitter:description" content="Direktna finansijska pomoć nastavnicima u obustavi rada. Pridruži se IT Srbiji u inicijativi solidarnosti!">
+        <meta property="twitter:image" content="{{ absolute_url(asset('image/social.webp')) }}">
+
+        <link rel="canonical" href="{{ app.request.uri }}">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.28.1/tabler-icons.min.css" integrity="sha512-UuL1Le1IzormILxFr3ki91VGuPYjsKQkRFUvSrEuwdVCvYt6a1X73cJ8sWb/1E726+rfDRexUn528XRdqrSAOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.12" rel="stylesheet" type="text/css" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.2"></script>
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+
+        <link href="{{ asset('stylesheet/general.css') }}" rel="stylesheet" type="text/css" />
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body data-theme="corporate" class="bg-[#EFEFEF]">
+        {% block navbar %}
+            <div class="navbar bg-base-100 shadow-sm px-10 py-5">
+                <div class="flex-1 align-middle">
+                    <a href="{{ path('home') }}">
+                        <img src="{{ asset('image/logo.webp') }}" alt="Logo" class="w-12 h-12 rounded-lg">
+                    </a>
+                </div>
+
+                <div class="flex-none">
+                    <ul class="menu menu-horizontal px-1 gap-2 size-xl">
+                        <li>
+                            <a href="{{ path('home') }}" class="link link-primary no-underline">Početna</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ path('register') }}" class="link link-primary no-underline">Postani donator</a>
+                        </li>
+
+                        {% if app.user %}
+                            <li>
+                                <a href="#" class="link link-primary no-underline">Profile</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('logout') }}" class="link link-primary no-underline">Odjavi se</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ path('login') }}" class="link link-primary no-underline">Uloguj se</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block body %}{% endblock %}
+
+        {% block footer %}
+            <div class="mt-20 pb-10">
+                <a href="https://itsrbija.org">
+                    <img src="{{ asset('image/logo.webp') }}" alt="IT Srbija logo" class="mx-auto w-12 h-12 rounded-lg">
+                </a>
+            </div>
+        {% endblock %}
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="{{ asset('javascript/general.js') }}"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

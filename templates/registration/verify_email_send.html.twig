@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block navbar %}{% endblock %}
+
+{% block body %}
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="w-full max-w-md p-4">
+            <div class="rounded-lg bg-white p-10 shadow-sm">
+                <div class="text-center">
+                    <span class="text-4xl font-bold">Mreža solidarnosti za prosvetu</span>
+                </div>
+
+                <div class="divider my-10"></div>
+
+                <div>
+                    Uspešno ste se registrovali, uskoro će Vam stići email sa linkom za verifikaciju.
+                </div>
+
+                <div class="mt-4">
+                    <a href="{{ path('home') }}" class="link link-primary no-underline mt-10">Početna</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

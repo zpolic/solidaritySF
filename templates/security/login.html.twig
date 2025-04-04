@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block navbar %}{% endblock %}
+
+{% block body %}
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="w-full max-w-md p-4">
+            <div class="rounded-lg bg-white p-10 shadow-sm">
+                <div class="text-center">
+                    <span class="text-4xl font-bold">Mreža solidarnosti za prosvetu</span>
+                </div>
+
+                <div class="divider my-10">Prijava</div>
+
+                {% if error %}
+                    <div role="alert" class="alert alert-error mb-4">
+                        <i class="fa-regular fa-circle-xmark"></i>
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                <form method="POST">
+                    <div class="mb-2">
+                        <label class="input w-full">
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail opacity-50"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                            <input type="email" class="" name="_username" placeholder="Email" value="{{ last_username }}" />
+                        </label>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="input w-full">
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-lock opacity-50"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /><path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
+                            <input type="password" class="grow" name="_password" placeholder="********" />
+                        </label>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <button type="submit" class="btn btn-primary w-full">Uloguj se</button>
+                </form>
+
+                <div class="text-end mt-2">
+                    <a href="#" class="link link-primary no-underline">Zaboravili ste lozinku?</a>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="mt-8 text-center">
+                    <span class="text-gray-500">Nemate nalog?</span>
+                    <a href="{{ path('register') }}" class="link link-primary no-underline">Registrujte se</a>
+                </div>
+
+                <div class="mt-2 text-center text-gray-500">
+                    <a href="{{ path('home') }}" class="link link-primary no-underline">
+                        Vrati se na početnu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

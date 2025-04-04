@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block navbar %}{% endblock %}
+
+{% block body %}
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="w-full max-w-md p-4">
+            <div class="rounded-lg bg-white p-10 shadow-sm">
+                <div class="text-center">
+                    <span class="text-4xl font-bold">Mreža solidarnosti za prosvetu</span>
+                </div>
+
+                <div class="divider my-10">Registracija</div>
+
+                {% for flash_error in app.flashes('verify_email_error') %}
+                    <div role="alert" class="alert alert-error mb-4">
+                        <i class="fa-regular fa-circle-xmark"></i>
+                        {{ flash_error }}
+                    </div>
+                {% endfor %}
+
+                {{ form_errors(registrationForm) }}
+
+                {{ form_start(registrationForm) }}
+                    <div class="mb-2">
+                        <label class="input w-full">
+                            {{ form_widget(registrationForm.firstName) }}
+                        </label>
+
+                        {{ form_errors(registrationForm.firstName) }}
+                    </div>
+                    <div class="mb-2">
+                        <label class="input w-full">
+                            {{ form_widget(registrationForm.lastName) }}
+                        </label>
+
+                        {{ form_errors(registrationForm.lastName) }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="input w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-mail opacity-50"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                            {{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Email'}}) }}
+                        </label>
+
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="input w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-lock opacity-50"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /><path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
+                            {{ form_widget(registrationForm.password.first) }}
+                        </label>
+
+                        {{ form_errors(registrationForm.password.first) }}
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="input w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-lock opacity-50"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /><path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
+                            {{ form_widget(registrationForm.password.second) }}
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full">Registrujte se</button>
+                {{ form_end(registrationForm) }}
+
+                <div class="divider"></div>
+
+                <div class="mt-8 text-center">
+                    <span class="text-gray-500">Već imate nalog?</span>
+                    <a href="{{ path('login') }}" class="link link-primary no-underline">Ulogujte se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
