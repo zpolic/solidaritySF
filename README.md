@@ -20,24 +20,9 @@ Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku na
 $ git clone https://github.com/IT-Srbija-Org/solidaritySF; cd solidaritySF;
 ```
 
-2. Podignite Docker
+2. Pokrenite script za instalaciju
 ```bash
-$ docker compose up -d;
+$ ./configureLocalProject.sh
 ```
 
-3. Instalirajte composer
-```bash
-$ docker exec solidarity-php-container php composer.phar install;
-```
-
-4. Kreiranje baze
-```bash
-$ docker exec solidarity-php-container php bin/console doctrine:database:create;
-```
-
-5. Kreiranje tabela
-```bash
-$ docker exec solidarity-php-container php bin/console doctrine:schema:update --force;
-```
-
-6. Otvorite URL adresu u pretraživaču: http://localhost:1000
+3. Otvorite URL adresu u pretraživaču: http://localhost:1000
