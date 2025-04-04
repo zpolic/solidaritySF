@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -87,13 +86,13 @@ class SecurityController extends AbstractController
         $user = $userRepository->find($id);
 
         if (!$user || $user->getResetToken() !== $token) {
-            $this->addFlash('danger', 'Neispravan link za restartovanje lozinke.');
+            $this->addFlash('error', 'Neispravan link za restartovanje lozinke.');
             return $this->redirectToRoute('forgot_password');
         }
 
         $createdAt = $user->getResetTokenCreatedAt();
         if (!$createdAt || (new \DateTimeImmutable())->getTimestamp() - $createdAt->getTimestamp() > 3600) {
-            $this->addFlash('danger', 'Link je istekao. Morate ponovo poslati zahtev za restartovanje.');
+            $this->addFlash('error', 'Link je istekao. Morate ponovo poslati zahtev za restartovanje.');
             return $this->redirectToRoute('forgot_password');
         }
 

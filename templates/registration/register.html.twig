@@ -11,14 +11,7 @@
                 </div>
 
                 <div class="divider my-10">Registracija</div>
-
-                {% for flash_error in app.flashes('verify_email_error') %}
-                    <div role="alert" class="alert alert-error mb-4">
-                        <i class="fa-regular fa-circle-xmark"></i>
-                        {{ flash_error }}
-                    </div>
-                {% endfor %}
-
+                {{ include('flashes.html.twig') }}
                 {{ form_errors(form) }}
 
                 {{ form_start(form) }}
