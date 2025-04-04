@@ -8,12 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Vec postoji korisnik sa ovim emailom')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -21,6 +22,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Ovo polje je obavezno')]
+    #[Assert\Email(message: 'Email nije validan')]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
@@ -36,9 +39,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Assert\NotBlank(['message' => 'Ovo polje je obavezno', 'groups' => ['rawPassword']])]
+    #[Assert\Length(min: 8, minMessage: 'Lozinka mora imati bar {{ limit }} karaktera', groups: ['rawPassword'])]
+    protected string $rawPassword;
+
+    #[Assert\NotBlank(message: 'Ovo polje je obavezno')]
+    #[Assert\Length(min: 3, max: 100, minMessage: 'Polje mora imati bar {{ limit }} karaktera', maxMessage: 'Polje ne može imati više od {{ limit }} karaktera')]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
+    #[Assert\NotBlank(message: 'Ovo polje je obavezno')]
+    #[Assert\Length(min: 3, max: 100, minMessage: 'Polje mora imati bar {{ limit }} karaktera', maxMessage: 'Polje ne može imati više od {{ limit }} karaktera')]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
@@ -232,5 +243,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->resetTokenCreatedAt = $resetTokenCreatedAt;
 
         return $this;
+    }
+
+    public function getRawPassword(): string
+    {
+        return $this->rawPassword;
+    }
+
+    public function setRawPassword(string $rawPassword): void
+    {
+        $this->rawPassword = $rawPassword;
     }
 }

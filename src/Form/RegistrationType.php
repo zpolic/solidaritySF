@@ -29,7 +29,7 @@ class RegistrationType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email',
             ])
-            ->add('password', RepeatedType::class, [
+            ->add('rawPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Lozinke se ne podudaraju.',
                 'first_options' => [
@@ -50,6 +50,7 @@ class RegistrationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'validation_groups' => ['Default', 'rawPassword'],
         ]);
     }
 }
