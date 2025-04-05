@@ -17,12 +17,31 @@ class UserRepositoryTest extends KernelTestCase
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
+            
+        // Create schema for SQLite in-memory database
+        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityManager);
+        $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        
+        try {
+            $schemaTool->createSchema($metadata);
+        } catch (\Exception $e) {
+            // Schema might already exist
+        }
+        
+        // Create a test user
+        $user = new User();
+        $user->setEmail('test@example.com');
+        $user->setFirstName('Test');
+        $user->setLastName('User');
+        $user->setPassword('hashed_password');
+        $user->setRoles(['ROLE_USER']);
+        
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
     
     public function testSearchMethod(): void
     {
-        $this->markTestSkipped('Skipping database tests until test database is configured');
-        
         /** @var UserRepository $userRepository */
         $userRepository = $this->entityManager->getRepository(User::class);
         
@@ -33,6 +52,16 @@ class UserRepositoryTest extends KernelTestCase
         $this->assertArrayHasKey('total', $result);
         $this->assertArrayHasKey('current_page', $result);
         $this->assertArrayHasKey('total_pages', $result);
+        
+        // Test the total count is at least 1 (our test user)
+        $this->assertGreaterThanOrEqual(1, $result['total']);
+        
+        // Test search with criteria
+        $result = $userRepository->search(['firstName' => 'Test']);
+        $this->assertGreaterThanOrEqual(1, count($result['items']));
+        
+        $result = $userRepository->search(['email' => 'example']);
+        $this->assertGreaterThanOrEqual(1, count($result['items']));
     }
     
     protected function tearDown(): void
