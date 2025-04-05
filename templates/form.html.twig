@@ -2,7 +2,7 @@
     {% if errors|length > 0 %}
         <div class="mb-6">
             {% for error in errors %}
-                <div class="alert alert-error rounded-md my-1 w-1/2 md:max-w-xs p-2 text-sm">
+                <div class="alert alert-error rounded-md my-1 w-1/2 md:max-w-xs p-2 text-md">
                     <i class="fa-regular fa-circle-xmark"></i>
                     {{ error.message }}
                 </div>
@@ -35,11 +35,11 @@
 
 {% block form_widget_simple %}
     {% set type = type|default('text') %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" class="input input-sm input-bordered rounded-md w-full md:max-w-xs"/>
+    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" class="input input-md input-bordered rounded-md w-full md:max-w-xs"/>
 {% endblock %}
 
 {% block button_widget %}
-    <button type="{{ type|default('button') }}" {{ block('button_attributes') }} class="btn btn-primary btn-sm">{{ label|trans({}, translation_domain)|raw }}</button>
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }} class="btn btn-primary btn-md">{{ label|trans({}, translation_domain)|raw }}</button>
 {% endblock %}
 
 {% block choice_widget_collapsed %}
@@ -47,7 +47,7 @@
         {% set required = false %}
     {%- endif -%}
 
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} class="select select-sm select-bordered rounded-md w-full md:max-w-xs">
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} class="select select-md select-bordered rounded-md w-full md:max-w-xs">
         {%- if placeholder is not none -%}
             <option value=""{% if placeholder_attr|default({}) %}{% with { attr: placeholder_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
         {%- endif -%}
@@ -94,7 +94,7 @@
 {% endblock %}
 
 {% block file_widget %}
-    <input type="file" {{ block('widget_attributes') }} class="file-input file-input-bordered file-input-sm w-full md:max-w-xs" {% if multiple is defined and multiple %} multiple="multiple"{% endif %} />
+    <input type="file" {{ block('widget_attributes') }} class="file-input file-input-bordered file-input-md w-full md:max-w-xs" {% if multiple is defined and multiple %} multiple="multiple"{% endif %} />
 {% endblock %}
 
 {% block form_row %}
