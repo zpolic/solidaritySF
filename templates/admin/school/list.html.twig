@@ -1,0 +1,58 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block content %}
+    {{ include('flashes.html.twig') }}
+
+    <div class="overflow-x-auto mt-6">
+        <div class="flex justify-between items-center mb-4">
+            <div class="text-gray-500">
+                Ukupno rezultata: <span class="font-bold">{{ schools.total }}</span>
+            </div>
+
+            <a href="{{ path('admin_school_new') }}" class="btn btn-primary">
+                <span class="ti ti-plus text-xl"></span>
+                Dodaj
+            </a>
+        </div>
+
+        <table class="table rounded-box border border-base-200">
+            <thead>
+                <tr class="bg-base-200 text-base-content">
+                    <th>ID</th>
+                    <th>Naziv</th>
+                    <th>
+                        <span class="ti ti-building-community text-xl"></span>
+                        Grad
+                    </th>
+                    <th>
+                        <span class="ti ti-building-cog text-xl"></span>
+                        Tip škole
+                    </th>
+                    <th>
+                        <span class="ti ti-calendar-event text-xl"></span>
+                        Kreiran
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for school in schools.items %}
+                <tr class="hover:bg-base-200">
+                    <th>{{ school.id }}</th>
+                    <td>{{ school.name }}</td>
+                    <td>{{ school.city.name }}</td>
+                    <td>{{ school.type.name }}</td>
+                    <td>{{ school.createdAt|date('d.m.Y.') }}</td>
+                    <td>
+                        <div class="flex gap-2 justify-end">
+                            <a href="{{ path('admin_school_edit', { 'id': school.id }) }}" class="btn btn-primary btn-sm flex tooltip" data-tip="Izmeni">
+                                <span class="ti ti-edit text-xl"></span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
