@@ -42,7 +42,7 @@
                         <th>{{ user.id }}</th>
                         <td>{{ user.fullName }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.getRoles|join(', ') }}</td>
+                        <td>{{ user.getRoles|roleTranslate }}</td>
                         <td>
                             {{ user.createdAt|date('d.m.Y.') }}
                         </td>

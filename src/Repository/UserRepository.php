@@ -39,6 +39,11 @@ class UserRepository extends ServiceEntityRepository
                 ->setParameter('email', '%' . $criteria['email'] . '%');
         }
 
+        if (!empty($criteria['role']) && $criteria['role'] != 'ROLE_USER') {
+            $qb->andWhere('u.roles LIKE :role')
+                ->setParameter('role', '%' . $criteria['role'] . '%');
+        }
+
         if (isset($criteria['isActive'])) {
             $qb->andWhere('u.isActive = :isActive')
                 ->setParameter('isActive', $criteria['isActive']);

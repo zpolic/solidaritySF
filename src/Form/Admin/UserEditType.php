@@ -25,6 +25,20 @@ class UserEditType extends AbstractType
                 'disabled' => true,
                 'label' => 'Email',
             ])
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Privilegije',
+                'choices' => array_flip(User::ROLES),
+                'expanded' => true,
+                'multiple' => true,
+                'disabled' => false,
+                'choice_attr' => function ($choice, $key, $value) {
+                    if ($value === 'ROLE_USER') {
+                        return ['disabled' => 'disabled'];
+                    }
+
+                    return [];
+                },
+            ])
             ->add('isActive', ChoiceType::class, [
                 'label' => 'Aktivan',
                 'choices' => [
