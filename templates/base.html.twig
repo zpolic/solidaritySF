@@ -36,7 +36,7 @@
         <link href="{{ asset('stylesheet/general.css') }}" rel="stylesheet" type="text/css" />
         {% block stylesheets %}{% endblock %}
     </head>
-    <body data-theme="corporate" class="bg-[#EFEFEF]">
+    <body data-theme="corporate">
         {% block navbar %}
             <div class="navbar bg-base-100 shadow-sm px-10 py-5">
                 <div class="flex-1 align-middle">
@@ -48,16 +48,12 @@
                 <div class="flex-none">
                     <ul class="menu menu-horizontal px-1 gap-2 size-xl">
                         <li>
-                            <a href="{{ path('home') }}" class="link link-primary no-underline">Početna</a>
-                        </li>
-
-                        <li>
                             <a href="{{ path('register') }}" class="link link-primary no-underline">Postani donator</a>
                         </li>
 
                         {% if app.user %}
                             <li>
-                                <a href="#" class="link link-primary no-underline">Profile</a>
+                                <a href="{{ path('profile_edit') }}" class="link link-primary no-underline">Profile</a>
                             </li>
                             <li>
                                 <a href="{{ path('logout') }}" class="link link-primary no-underline">Odjavi se</a>

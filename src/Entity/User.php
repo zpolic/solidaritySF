@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -38,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[SecurityAssert\UserPassword(['message' => 'Trenutna lozinka nije ispravna', 'groups' => ['currentRawPassword']])]
+    protected string $currentRawPassword;
 
     #[Assert\NotBlank(['message' => 'Ovo polje je obavezno', 'groups' => ['rawPassword']])]
     #[Assert\Length(min: 8, minMessage: 'Lozinka mora imati bar {{ limit }} karaktera', groups: ['rawPassword'])]
@@ -243,6 +247,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->resetTokenCreatedAt = $resetTokenCreatedAt;
 
         return $this;
+    }
+
+    public function getCurrentRawPassword(): string
+    {
+        return $this->currentRawPassword;
+    }
+
+    public function setCurrentRawPassword(string $currentRawPassword): void
+    {
+        $this->currentRawPassword = $currentRawPassword;
     }
 
     public function getRawPassword(): string

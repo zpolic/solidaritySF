@@ -1,0 +1,106 @@
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <div class="mb-6">
+            {% for error in errors %}
+                <div class="alert alert-error rounded-md my-1 w-1/2 md:max-w-xs p-2 text-sm">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                    {{ error.message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block form_label %}
+    {% set showLabel = 1 %}
+    {% if form.vars.block_prefixes[1] == 'checkbox' %}
+        {% set showLabel = 0 %}
+    {% endif %}
+
+    {% if label is not same as(false) and showLabel %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' block opacity-80')|trim}) %}
+
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class ~ ' required')|trim}) %}
+            {% set label = label|raw ~ ' <span class="text-error">*</span>' %}
+        {% endif %}
+
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|raw }}</label>
+    {% endif %}
+{% endblock %}
+
+{% block form_widget_simple %}
+    {% set type = type|default('text') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} value="{{ value }}" class="input input-sm input-bordered rounded-md w-full md:max-w-xs"/>
+{% endblock %}
+
+{% block button_widget %}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }} class="btn btn-primary btn-sm">{{ label|trans({}, translation_domain)|raw }}</button>
+{% endblock %}
+
+{% block choice_widget_collapsed %}
+    {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
+        {% set required = false %}
+    {%- endif -%}
+
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} class="select select-sm select-bordered rounded-md w-full md:max-w-xs">
+        {%- if placeholder is not none -%}
+            <option value=""{% if placeholder_attr|default({}) %}{% with { attr: placeholder_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+        {%- endif -%}
+
+        {%- if preferred_choices|length > 0 -%}
+            {% set options = preferred_choices %}
+            {% set render_preferred_choices = true %}
+            {{- block('choice_widget_options') -}}
+            {%- if choices|length > 0 and separator is not none -%}
+                {%- if separator_html is not defined or separator_html is same as(false) -%}
+                    <option disabled="disabled">{{ separator }}</option>
+                {% else %}
+                    {{ separator|raw }}
+                {% endif %}
+            {%- endif -%}
+        {%- endif -%}
+
+        {%- set options = choices -%}
+        {%- set render_preferred_choices = false -%}
+        {{- block('choice_widget_options') -}}
+    </select>
+{% endblock %}
+
+{% block checkbox_widget %}
+    <div class="inline-block mr-2 mb-2">
+        <div class="flex items-center my-2 mr-4">
+            <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} class="checkbox align-text-top" />
+            <label for="{{ id }}" class="ml-2 block opacity-80">{{ label|raw }}</label>
+        </div>
+    </div>
+{% endblock %}
+
+{%- block radio_widget -%}
+    <div class="inline-block mr-2 mb-2">
+        <div class="flex items-center my-2 mr-4">
+            <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} class="radio align-text-top" />
+            <label for="{{ id }}" class="ml-2 block opacity-80">{{ label|raw }}</label>
+        </div>
+    </div>
+{%- endblock radio_widget -%}
+
+{% block textarea_widget %}
+    <textarea {{ block('widget_attributes') }} class="textarea textarea-bordered w-full h-32">{{ value }}</textarea>
+{% endblock %}
+
+{% block file_widget %}
+    <input type="file" {{ block('widget_attributes') }} class="file-input file-input-bordered file-input-sm w-full md:max-w-xs" {% if multiple is defined and multiple %} multiple="multiple"{% endif %} />
+{% endblock %}
+
+{% block form_row %}
+    <div class="mb-4 w-full">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
