@@ -28,6 +28,11 @@ class UserSearchType extends AbstractType
                 'required' => false,
                 'label' => 'Email',
             ])
+            ->add('role', ChoiceType::class, [
+                'required' => false,
+                'label' => 'Privilegije',
+                'choices' => array_flip(User::ROLES),
+            ])
             ->add('isActive', ChoiceType::class, [
                 'required' => false,
                 'label' => 'Aktivan',
