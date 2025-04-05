@@ -3,6 +3,9 @@
 {% block content %}
     {{ include('flashes.html.twig') }}
 
+    {% form_theme form with ['form.html.twig', 'form_inline.html.twig'] %}
+    {{ form(form) }}
+
     <div class="overflow-x-auto mt-6">
         <div class="flex justify-between items-center mb-4">
             <div class="text-gray-500">

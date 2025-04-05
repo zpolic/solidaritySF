@@ -26,6 +26,16 @@ class SchoolRepository extends ServiceEntityRepository
                 ->setParameter('name', '%' . $criteria['name'] . '%');
         }
 
+        if (!empty($criteria['city'])) {
+            $qb->andWhere('c.city = :city')
+                ->setParameter('city', $criteria['city']);
+        }
+
+        if (!empty($criteria['type'])) {
+            $qb->andWhere('c.type = :type')
+                ->setParameter('type', $criteria['type']);
+        }
+
         // Set the sorting
         $qb->orderBy('c.id', 'ASC');
 
