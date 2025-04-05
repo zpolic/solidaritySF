@@ -1,0 +1,80 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block content %}
+    {% form_theme form with ['form.html.twig', 'form_inline.html.twig'] %}
+    {{ form(form) }}
+
+    <div class="overflow-x-auto mt-6">
+        <div class="text-gray-500 mb-2">
+            Ukupno rezultata: <span class="font-bold">{{ users.total }}</span>
+        </div>
+
+        <table class="table rounded-box border border-base-200">
+            <thead>
+                <tr class="bg-base-200 text-base-content">
+                    <th></th>
+                    <th>
+                        <span class="ti ti-user text-xl"></span>
+                        Ime
+                    </th>
+                    <th>
+                        <span class="ti ti-mail text-xl"></span>
+                        Email
+                    </th>
+                    <th>
+                        <span class="ti ti-military-rank text-xl"></span>
+                        Privilegija
+                    </th>
+                    <th>
+                        <span class="ti ti-calendar-event text-xl"></span>
+                        Registrovan
+                    </th>
+                    <th>Aktivan?</th>
+                    <th>Verifikovan?</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users.items %}
+                    <tr class="hover:bg-base-200">
+                        <th>{{ user.id }}</th>
+                        <td>{{ user.fullName }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.getRoles|join(', ') }}</td>
+                        <td>
+                            {{ user.createdAt|date('d.m.Y.') }}
+                        </td>
+                        <td>
+                            {% if user.isActive %}
+                                <div class="status status-success mb-1"></div>
+                                Da
+                            {% else %}
+                                <div class="status status-error mb-1"></div>
+                                Ne
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.isVerified %}
+                                <div class="status status-success mb-1"></div>
+                                Da
+                            {% else %}
+                                <div class="status status-error mb-1"></div>
+                                Ne
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="flex gap-2 justify-end">
+                                <a href="{{ path('admin_user_edit', { 'id': user.id }) }}" class="btn btn-primary btn-sm flex tooltip" data-tip="Izmeni">
+                                    <span class="ti ti-edit text-xl"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% import "macros/pagination.twig" as pagination %}
+    {{ pagination.navigation('admin_user_list', users.total_pages, users.current_page) }}
+{% endblock %}

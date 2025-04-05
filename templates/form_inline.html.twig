@@ -1,0 +1,16 @@
+{% block form_row %}
+    <div class="my-2 mx-auto md:mx-3 inline-block w-full md:w-auto">
+        {% if form.vars.block_prefixes[1] != 'checkbox' %}
+            {{ form_label(form) }}
+        {% endif %}
+
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block button_row -%}
+    <div class="my-2 mx-auto md:mx-3 block w-full md:w-auto">
+        {{ form_widget(form) }}
+    </div>
+{%- endblock button_row %}

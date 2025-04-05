@@ -82,7 +82,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="{% if app.request.get('_route') == '#' %}menu-active{% endif %}">
+                    <a href="{{ path('admin_user_list') }}" class="{% if app.request.get('_route') == 'admin_user_list' %}menu-active{% endif %}">
                         <span class="ti ti-users text-2xl"></span>
                         Korisnici
                     </a>
