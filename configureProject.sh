@@ -1,7 +1,19 @@
 #!/bin/bash
 
 # Run Docker
-docker compose up -d;
+# Check if docker compose or docker-compose is available
+if command -v docker-compose &> /dev/null
+then
+    # Use docker-compose if available
+    docker-compose up -d;
+elif docker compose &> /dev/null
+then
+    # Use docker compose if available
+    docker compose up -d;
+else
+    echo "Error: Neither docker-compose nor docker compose command found"
+    exit 1
+fi
 
 # Install dependencies
 docker exec solidarity-php-container php composer.phar install;
