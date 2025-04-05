@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\CityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'Vec postoji tip sa ovim nazivom')]
+#[ORM\HasLifecycleCallbacks]
 class City
 {
     #[ORM\Id]
@@ -14,7 +17,9 @@ class City
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Naziv je obavezno polje')]
+    #[Assert\Length(max: 255, maxMessage: 'Naziv ne može biti duži od {{ limit }} karaktera')]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
