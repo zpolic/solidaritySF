@@ -3,13 +3,16 @@
 {% block content %}
     {{ include('flashes.html.twig') }}
 
+    {% form_theme form with ['form.html.twig', 'form_inline.html.twig'] %}
+    {{ form(form) }}
+
     <div class="overflow-x-auto mt-6">
-        <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center mb-4">
             <div class="text-gray-500">
-                Ukupno rezultata: <span class="font-bold">{{ items|length }}</span>
+                Ukupno rezultata: <span class="font-bold">{{ cities.total }}</span>
             </div>
 
-            <a href="{{ path('admin_school_type_new') }}" class="btn btn-primary">
+            <a href="{{ path('admin_city_new') }}" class="btn btn-primary">
                 <span class="ti ti-plus text-xl"></span>
                 Dodaj
             </a>
@@ -28,14 +31,14 @@
                 </tr>
             </thead>
             <tbody>
-            {% for item in items %}
+            {% for city in cities.items %}
                 <tr class="hover:bg-base-200">
-                    <th>{{ item.id }}</th>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.createdAt|date('d.m.Y.') }}</td>
+                    <th>{{ city.id }}</th>
+                    <td>{{ city.name }}</td>
+                    <td>{{ city.createdAt|date('d.m.Y.') }}</td>
                     <td>
                         <div class="flex gap-2 justify-end">
-                            <a href="{{ path('admin_school_type_edit', { 'id': item.id }) }}" class="btn btn-primary btn-sm flex tooltip" data-tip="Izmeni">
+                            <a href="{{ path('admin_city_edit', { 'id': city.id }) }}" class="btn btn-primary btn-sm flex tooltip" data-tip="Izmeni">
                                 <span class="ti ti-edit text-xl"></span>
                             </a>
                         </div>
@@ -45,4 +48,7 @@
             </tbody>
         </table>
     </div>
+
+    {% import "macros/pagination.twig" as pagination %}
+    {{ pagination.navigation('admin_city_list', cities.total_pages, cities.current_page) }}
 {% endblock %}

@@ -22,7 +22,7 @@ class UserRepository extends ServiceEntityRepository
 
     public function search(array $criteria, int $page = 1, int $limit = 50): array
     {
-        $qb = $this->createQueryBuilder('c');
+        $qb = $this->createQueryBuilder('u');
 
         if (!empty($criteria['firstName'])) {
             $qb->andWhere('u.firstName LIKE :firstName')
@@ -50,7 +50,7 @@ class UserRepository extends ServiceEntityRepository
         }
 
         // Set the sorting
-        $qb->orderBy('c.id', 'ASC');
+        $qb->orderBy('u.id', 'ASC');
 
         // Apply pagination only if $limit is set and greater than 0
         if ($limit && $limit > 0) {

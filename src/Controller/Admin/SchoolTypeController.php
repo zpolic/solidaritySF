@@ -36,6 +36,9 @@ final class SchoolTypeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($schoolType);
             $this->entityManager->flush();
+
+            $this->addFlash('success', 'Dodat je novi tip škole');
+            return $this->redirectToRoute('admin_school_type_list');
         }
 
         return $this->render('admin/schoolType/edit.html.twig', [
@@ -52,6 +55,9 @@ final class SchoolTypeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($schoolType);
             $this->entityManager->flush();
+
+            $this->addFlash('success', 'Tip škole je izmenjen');
+            return $this->redirectToRoute('admin_school_type_list');
         }
 
         return $this->render('admin/schoolType/edit.html.twig', [

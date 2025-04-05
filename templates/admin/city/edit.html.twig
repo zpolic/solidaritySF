@@ -2,11 +2,13 @@
 
 {% block content %}
     <div class="text-xl">
-        <span class="ti ti-user text-2xl"></span>
-        Izmena korisničkih podataka
+        <span class="ti ti-building-community text-2xl"></span>
+        Grad
     </div>
 
     <div class="divider"></div>
+
+    {{ include('flashes.html.twig') }}
 
     {% form_theme form with ['form.html.twig'] %}
     {{ form(form) }}

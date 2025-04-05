@@ -43,7 +43,8 @@ final class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Podaci su uspešno sačuvani');
+            $this->addFlash('success', 'Korisnički podaci su izmenjeni');
+            return $this->redirectToRoute('admin_user_list');
         }
 
         return $this->render('admin/user/edit.html.twig', [
