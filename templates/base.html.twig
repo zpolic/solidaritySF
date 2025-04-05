@@ -52,6 +52,12 @@
                         </li>
 
                         {% if app.user %}
+                            {% if 'ROLE_ADMIN' in app.user.getRoles %}
+                                <li>
+                                    <a href="{{ path('admin_home') }}" class="link link-primary no-underline">Admin Panel</a>
+                                </li>
+                            {% endif %}
+
                             <li>
                                 <a href="{{ path('profile_edit') }}" class="link link-primary no-underline">Profile</a>
                             </li>
