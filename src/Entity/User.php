@@ -18,6 +18,11 @@ use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 #[UniqueEntity(fields: ['email'], message: 'Vec postoji korisnik sa ovim emailom')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const ROLES = [
+        'ROLE_USER' => 'Korisnik',
+        'ROLE_ADMIN' => 'Administrator',
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

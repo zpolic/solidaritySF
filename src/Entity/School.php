@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SchoolRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SchoolRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -15,14 +16,19 @@ class School
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Naziv je obavezno polje')]
+    #[Assert\Length(max: 255, maxMessage: 'Naziv ne može biti duži od {{ limit }} karaktera')]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Assert\NotBlank(message: 'Tip škole je obavezno polje')]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?SchoolType $type = null;
 
+    #[Assert\NotBlank(message: 'Grad je obavezno polje')]
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     private ?City $city = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
