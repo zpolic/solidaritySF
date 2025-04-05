@@ -45,6 +45,12 @@
         <div class="drawer-side">
             <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
             <ul class="menu min-h-screen w-50 gap-1 bg-base-100 rounded-r-lg ">
+                <li class="mb-4">
+                    <a href="{{ path('home') }}">
+                        <span class="ti ti-chevrons-left text-2xl"></span>
+                        Nazad na sajt
+                    </a>
+                </li>
                 <li>
                     <a href="{{ path('admin_home') }}" class="{% if app.request.get('_route') == 'admin_home' %}menu-active{% endif %}">
                         <span class="ti ti-home text-2xl"></span>
