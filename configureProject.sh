@@ -23,3 +23,7 @@ docker exec solidarity-php-container php bin/console doctrine:database:create --
 
 # Create tables
 docker exec solidarity-php-container php bin/console doctrine:schema:update --force;
+
+# Execute Fixtures
+docker exec solidarity-php-container php bin/console doctrine:fixtures:load --group=1 --no-interaction;
+docker exec solidarity-php-container php bin/console doctrine:fixtures:load --group=2 --append --no-interaction;
