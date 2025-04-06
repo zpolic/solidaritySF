@@ -80,6 +80,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $resetTokenCreatedAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserDonor $userDonor = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -277,5 +280,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullName(): string
     {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function getUserDonor(): ?UserDonor
+    {
+        return $this->userDonor;
+    }
+
+    public function setUserDonor(UserDonor $userDonor): static
+    {
+        // set the owning side of the relation if necessary
+        if ($userDonor->getUser() !== $this) {
+            $userDonor->setUser($this);
+        }
+
+        $this->userDonor = $userDonor;
+
+        return $this;
     }
 }
