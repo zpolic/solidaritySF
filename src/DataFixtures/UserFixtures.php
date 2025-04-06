@@ -35,6 +35,7 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
             $user->setEmail($userData['email']);
             $user->setPassword($this->passwordHasher->hashPassword($user, '12345678'));
             $user->setRoles($userData['role']);
+            $user->setIsVerified(true);
             $manager->persist($user);
         }
 
