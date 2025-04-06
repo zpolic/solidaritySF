@@ -1,0 +1,63 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block content %}
+    {{ include('flashes.html.twig') }}
+
+    {% form_theme form with ['form.html.twig', 'form_inline.html.twig'] %}
+    {{ form(form) }}
+
+    <div class="overflow-x-auto mt-6">
+        <div class="text-gray-500 mb-2">
+            Ukupno rezultata: <span class="font-bold">{{ donors.total }}</span>
+        </div>
+
+        <table class="table rounded-box border border-base-200">
+            <thead>
+                <tr class="bg-base-200 text-base-content">
+                    <th>
+                        <span class="ti ti-user text-xl"></span>
+                        Ime
+                    </th>
+                    <th>
+                        <span class="ti ti-mail text-xl"></span>
+                        Email
+                    </th>
+                    <th>
+                        <span class="ti ti-repeat text-xl"></span>
+                        Mesečna podrška
+                    </th>
+                    <th>
+                        <span class="ti ti-cash text-xl"></span>
+                        Iznos
+                    </th>
+                    <th>
+                        <span class="ti ti-calendar-event text-xl"></span>
+                        Registrovan
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for donor in donors.items %}
+                <tr class="hover:bg-base-200">
+                    <td>{{ donor.user.fullName ?? donor.user.username }}</td>
+                    <td>{{ donor.user.email }}</td>
+                    <td>
+                        {% if donor.isMonthly %}
+                            <div class="status status-success mb-1"></div>
+                            Da
+                        {% else %}
+                            <div class="status status-error mb-1"></div>
+                            Ne
+                        {% endif %}
+                    </td>
+                    <td>{{ donor.amount|number_format }}</td>
+                    <td>{{ donor.createdAt|date('d.m.Y.') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% import "macros/pagination.twig" as pagination %}
+    {{ pagination.navigation('admin_donor_list', donors.total_pages, donors.current_page) }}
+{% endblock %}
