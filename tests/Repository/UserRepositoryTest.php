@@ -2,14 +2,18 @@
 
 namespace App\Tests\Repository;
 
+use App\DataFixtures\UserFixtures;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserRepositoryTest extends KernelTestCase
 {
     private ?EntityManagerInterface $entityManager;
+    private AbstractDatabaseTool $databaseTool;
     
     protected function setUp(): void
     {
@@ -17,27 +21,17 @@ class UserRepositoryTest extends KernelTestCase
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
-            
-        // Create schema for SQLite in-memory database
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityManager);
-        $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
         
-        try {
-            $schemaTool->createSchema($metadata);
-        } catch (\Exception $e) {
-            // Schema might already exist
-        }
-        
-        // Create a test user
-        $user = new User();
-        $user->setEmail('test@example.com');
-        $user->setFirstName('Test');
-        $user->setLastName('User');
-        $user->setPassword('hashed_password');
-        $user->setRoles(['ROLE_USER']);
-        
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        // Load the database tool and fixtures
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->loadFixtures();
+    }
+    
+    private function loadFixtures(): void
+    {
+        $this->databaseTool->loadFixtures([
+            UserFixtures::class
+        ]);
     }
     
     public function testSearchMethod(): void
@@ -53,15 +47,20 @@ class UserRepositoryTest extends KernelTestCase
         $this->assertArrayHasKey('current_page', $result);
         $this->assertArrayHasKey('total_pages', $result);
         
-        // Test the total count is at least 1 (our test user)
-        $this->assertGreaterThanOrEqual(1, $result['total']);
+        // Test the total count is at least 2 (from fixtures)
+        $this->assertGreaterThanOrEqual(2, $result['total']);
         
-        // Test search with criteria
-        $result = $userRepository->search(['firstName' => 'Test']);
+        // Test search with criteria matching fixture data
+        $result = $userRepository->search(['firstName' => 'Marko']);
         $this->assertGreaterThanOrEqual(1, count($result['items']));
         
-        $result = $userRepository->search(['email' => 'example']);
+        $result = $userRepository->search(['email' => 'admin@gmail.com']);
         $this->assertGreaterThanOrEqual(1, count($result['items']));
+        
+        // Check specific user data from fixtures
+        $result = $userRepository->search(['lastName' => 'Markovic']);
+        $this->assertEquals(1, count($result['items']));
+        $this->assertEquals('korisnik@gmail.com', $result['items'][0]->getEmail());
     }
     
     protected function tearDown(): void

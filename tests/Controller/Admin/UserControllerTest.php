@@ -2,17 +2,50 @@
 
 namespace App\Tests\Controller\Admin;
 
+use App\DataFixtures\UserFixtures;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserControllerTest extends WebTestCase
 {
+    private KernelBrowser $client;
+    private AbstractDatabaseTool $databaseTool;
+    private ?UserRepository $userRepository;
+    
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+        $container = static::getContainer();
+        
+        $this->databaseTool = $container->get(DatabaseToolCollection::class)->get();
+        $this->loadFixtures();
+        
+        $this->userRepository = $container->get(UserRepository::class);
+    }
+    
+    private function loadFixtures(): void
+    {
+        $this->databaseTool->loadFixtures([
+            UserFixtures::class
+        ]);
+    }
+    
+    private function loginAsAdmin(): void
+    {
+        $adminUser = $this->userRepository->findOneBy(['email' => 'admin@gmail.com']);
+        $this->client->loginUser($adminUser);
+    }
+    
     public function testUserListRequiresAuthentication(): void
     {
-        $client = static::createClient();
-        $client->request('GET', '/admin/user/list');
+        $this->client->request('GET', '/admin/user/list');
         
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $statusCode = $response->getStatusCode();
         
         // Should not be accessible without authentication
@@ -28,12 +61,23 @@ class UserControllerTest extends WebTestCase
         );
     }
     
+    public function testUserListAccessibleByAdmin(): void
+    {
+        $this->loginAsAdmin();
+        $this->client->request('GET', '/admin/user/list');
+        
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    }
+    
     public function testUserEditRequiresAuthentication(): void
     {
-        $client = static::createClient();
-        $client->request('GET', '/admin/user/1/edit');
+        // Get a user ID from fixtures
+        $user = $this->userRepository->findOneBy(['email' => 'korisnik@gmail.com']);
+        $userId = $user->getId();
         
-        $response = $client->getResponse();
+        $this->client->request('GET', "/admin/user/{$userId}/edit");
+        
+        $response = $this->client->getResponse();
         $statusCode = $response->getStatusCode();
         
         // Should not be accessible without authentication
@@ -44,9 +88,21 @@ class UserControllerTest extends WebTestCase
             in_array($statusCode, [
                 Response::HTTP_UNAUTHORIZED, 
                 Response::HTTP_FORBIDDEN,
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-                Response::HTTP_NOT_FOUND  // Could be a 404 if ID 1 doesn't exist
+                Response::HTTP_INTERNAL_SERVER_ERROR
             ])
         );
+    }
+    
+    public function testUserEditAccessibleByAdmin(): void
+    {
+        $this->loginAsAdmin();
+        
+        // Get a user ID from fixtures
+        $user = $this->userRepository->findOneBy(['email' => 'korisnik@gmail.com']);
+        $userId = $user->getId();
+        
+        $this->client->request('GET', "/admin/user/{$userId}/edit");
+        
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 }

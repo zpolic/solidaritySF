@@ -2,14 +2,18 @@
 
 namespace App\Tests\Repository;
 
+use App\DataFixtures\SchoolTypeFixtures;
 use App\Entity\SchoolType;
 use App\Repository\SchoolTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SchoolTypeRepositoryTest extends KernelTestCase
 {
     private ?EntityManagerInterface $entityManager;
+    private AbstractDatabaseTool $databaseTool;
     
     protected function setUp(): void
     {
@@ -18,26 +22,16 @@ class SchoolTypeRepositoryTest extends KernelTestCase
             ->get('doctrine')
             ->getManager();
             
-        // Create schema for SQLite in-memory database
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityManager);
-        $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        
-        try {
-            $schemaTool->createSchema($metadata);
-        } catch (\Exception $e) {
-            // Schema might already exist
-        }
-        
-        // Create test school types
-        $elementary = new SchoolType();
-        $elementary->setName('Elementary School');
-        
-        $highSchool = new SchoolType();
-        $highSchool->setName('High School');
-        
-        $this->entityManager->persist($elementary);
-        $this->entityManager->persist($highSchool);
-        $this->entityManager->flush();
+        // Load the database tool and fixtures
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->loadFixtures();
+    }
+    
+    private function loadFixtures(): void
+    {
+        $this->databaseTool->loadFixtures([
+            SchoolTypeFixtures::class
+        ]);
     }
     
     public function testFindAll(): void
@@ -48,13 +42,13 @@ class SchoolTypeRepositoryTest extends KernelTestCase
         // Test findAll method
         $result = $schoolTypeRepository->findAll();
         $this->assertIsArray($result);
-        $this->assertCount(2, $result);
+        $this->assertCount(2, $result); // Should have 2 school types from fixtures
         
         // Test findBy method with criteria
-        $result = $schoolTypeRepository->findBy(['name' => 'Elementary School']);
+        $result = $schoolTypeRepository->findBy(['name' => 'Srednja škola']);
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
-        $this->assertEquals('Elementary School', $result[0]->getName());
+        $this->assertEquals('Srednja škola', $result[0]->getName());
     }
     
     protected function tearDown(): void
