@@ -12,11 +12,13 @@
             </p>
         </header>
 
-        <div class="text-center">
-            <a href="{{ path('register') }}" class="btn btn-primary btn-xl transition duration-200 hover:scale-105">
-                Registruj se i podrži
-            </a>
-        </div>
+        {% block supportButton %}
+            <div class="text-center">
+                <a href="{{ path('register') }}" class="btn btn-primary btn-xl transition duration-200 hover:scale-105">
+                    Registruj se i podrži
+                </a>
+            </div>
+        {% endblock %}
 
         <div class="flex flex-row justify-center mt-8 gap-4">
             <a href="https://www.linkedin.com/company/it-srbija/" target="_blank" title="LinkedIn" class="flex items-center justify-center w-12 h-12 text-primary transition duration-200 hover:scale-110">
@@ -66,7 +68,7 @@
             <p class="text-gray-500">Obratite nam se na naš <a href="#" class="text-primary hover:underline">email</a> ili preko naših društvenih mreža.</p>
         </header>
 
-        <div class="space-y-8">
+        <div class="space-y-8 my-10">
             <section class="rounded-lg bg-base-100 p-10 shadow-sm">
                 <h2 class="text-2xl font-semibold mb-3">
                     🤔 Šta je Mreža solidarnosti za prosvetu?
@@ -188,16 +190,13 @@
             </section>
         </div>
 
-        <section class="text-center mt-10">
-            <a href="/obrazacDonatori" class="btn btn-primary btn-lg transition duration-200 hover:scale-105">
-                Registruj se i podrži &rarr;
-            </a>
+        {{ block('supportButton') }}
 
+        <section class="text-center mt-10">
             <div class="text-gray-500">
                 <p class="mt-8">Što više donatora, to više nastavnika može dobiti pomoć!</p>
                 <p>Pridruži se i budi deo mreže solidarnosti. Registruj se putem ove forme i podrži one koji su na prvoj liniji borbe za bolje obrazovanje!</p>
             </div>
-
         </section>
     </div>
 {% endblock %}
