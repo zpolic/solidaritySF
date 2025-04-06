@@ -2,14 +2,18 @@
 
 namespace App\Tests\Repository;
 
+use App\DataFixtures\CityFixtures;
 use App\Entity\City;
 use App\Repository\CityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CityRepositoryTest extends KernelTestCase
 {
     private ?EntityManagerInterface $entityManager;
+    private AbstractDatabaseTool $databaseTool;
     
     protected function setUp(): void
     {
@@ -18,30 +22,16 @@ class CityRepositoryTest extends KernelTestCase
             ->get('doctrine')
             ->getManager();
             
-        // Create schema for SQLite in-memory database
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityManager);
-        $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        
-        try {
-            $schemaTool->createSchema($metadata);
-        } catch (\Exception $e) {
-            // Schema might already exist
-        }
-        
-        // Create test cities
-        $belgrade = new City();
-        $belgrade->setName('Belgrade');
-        
-        $noviSad = new City();
-        $noviSad->setName('Novi Sad');
-        
-        $nis = new City();
-        $nis->setName('Nis');
-        
-        $this->entityManager->persist($belgrade);
-        $this->entityManager->persist($noviSad);
-        $this->entityManager->persist($nis);
-        $this->entityManager->flush();
+        // Load the database tool and fixtures
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->loadFixtures();
+    }
+    
+    private function loadFixtures(): void
+    {
+        $this->databaseTool->loadFixtures([
+            CityFixtures::class
+        ]);
     }
     
     public function testSearchMethod(): void
@@ -57,8 +47,8 @@ class CityRepositoryTest extends KernelTestCase
         $this->assertArrayHasKey('current_page', $result);
         $this->assertArrayHasKey('total_pages', $result);
         
-        // Test the total count is 3 (our test cities)
-        $this->assertEquals(3, $result['total']);
+        // Test the total count is 4 (our fixture cities: Beograd, Novi Sad, Subotica, Niš)
+        $this->assertEquals(4, $result['total']);
         
         // Test search with name criteria
         $result = $cityRepository->search(['name' => 'Novi']);
@@ -68,13 +58,13 @@ class CityRepositoryTest extends KernelTestCase
         // Test pagination
         $result = $cityRepository->search([], 1, 2); // Page 1, limit 2
         $this->assertEquals(2, count($result['items'])); // 2 items per page
-        $this->assertEquals(3, $result['total']); // 3 cities total
+        $this->assertEquals(4, $result['total']); // 4 cities total
         $this->assertEquals(1, $result['current_page']); // Current page is 1
-        $this->assertEquals(2, $result['total_pages']); // 2 pages total (3 items with 2 per page)
+        $this->assertEquals(2, $result['total_pages']); // 2 pages total (4 items with 2 per page)
         
         // Test second page
         $result = $cityRepository->search([], 2, 2); // Page 2, limit 2
-        $this->assertEquals(1, count($result['items'])); // Only 1 item on second page
+        $this->assertEquals(2, count($result['items'])); // 2 items on second page
     }
     
     protected function tearDown(): void

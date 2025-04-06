@@ -2,35 +2,69 @@
 
 namespace App\Tests\Controller\Admin;
 
+use App\DataFixtures\UserFixtures;
+use App\Repository\UserRepository;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class HomeControllerTest extends WebTestCase
 {
-    public function testAdminAreaRedirectsOrDeniesAccess(): void
+    private KernelBrowser $client;
+    private AbstractDatabaseTool $databaseTool;
+    private ?UserRepository $userRepository;
+    
+    protected function setUp(): void
     {
-        // Create a client without logging in
-        $client = static::createClient();
-        $client->request('GET', '/admin/');
+        $this->client = static::createClient();
+        $container = static::getContainer();
         
-        $response = $client->getResponse();
+        $this->databaseTool = $container->get(DatabaseToolCollection::class)->get();
+        $this->loadFixtures();
+        
+        $this->userRepository = $container->get(UserRepository::class);
+    }
+    
+    private function loadFixtures(): void
+    {
+        $this->databaseTool->loadFixtures([
+            UserFixtures::class
+        ]);
+    }
+    
+    private function loginAsAdmin(): void
+    {
+        $adminUser = $this->userRepository->findOneBy(['email' => 'admin@gmail.com']);
+        $this->client->loginUser($adminUser);
+    }
+    
+    public function testAdminAreaRequiresAuthentication(): void
+    {
+        $this->client->request('GET', '/admin/');
+        
+        $response = $this->client->getResponse();
         $statusCode = $response->getStatusCode();
         
-        // The test environment might behave differently, but it should not give a 200 OK
-        // for admin areas without authentication
-        $this->assertNotEquals(Response::HTTP_OK, $statusCode, 
-            "Admin area should not return 200 OK without authentication, got status code: {$statusCode}"
-        );
+        // The admin area should not be accessible without authentication
+        $this->assertNotEquals(Response::HTTP_OK, $statusCode);
         
-        // Verify it's either a redirect or an error
         $this->assertTrue(
             $response->isRedirection() || 
             in_array($statusCode, [
                 Response::HTTP_UNAUTHORIZED, 
                 Response::HTTP_FORBIDDEN,
-                Response::HTTP_INTERNAL_SERVER_ERROR, // Might happen if security is misconfigured in test
-            ]), 
-            "Expected redirect or error status code, got: {$statusCode}"
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            ])
         );
+    }
+    
+    public function testAdminAreaAccessibleByAdmin(): void
+    {
+        $this->loginAsAdmin();
+        $this->client->request('GET', '/admin/');
+        
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 }
