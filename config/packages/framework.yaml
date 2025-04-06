@@ -4,6 +4,10 @@ framework:
     annotations: false
     http_method_override: false
     handle_all_throwables: true
+    
+    # Explicitly configure php_errors.log to address deprecation
+    php_errors:
+        log: true
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
@@ -17,3 +21,5 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        php_errors:
+            log: true
