@@ -1,7 +1,7 @@
+[![Symfony Tests](../../actions/workflows/symfony.yml/badge.svg)](../../actions/workflows/symfony.yml)
+
 # Mreža Solidarnosti
 Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku nastavnicima i vannastavnom osoblju čija je plata umanjena zbog obustave rada.
-
-[![Symfony Tests](../../actions/workflows/symfony.yml/badge.svg)](../../actions/workflows/symfony.yml)
 
 ![image.jpg](public/image/readme.png)
 
