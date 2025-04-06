@@ -2,20 +2,27 @@
 
 namespace App\Tests\Repository;
 
+use App\DataFixtures\CityFixtures;
+use App\DataFixtures\SchoolFixtures;
+use App\DataFixtures\SchoolTypeFixtures;
 use App\Entity\City;
 use App\Entity\School;
 use App\Entity\SchoolType;
+use App\Repository\CityRepository;
 use App\Repository\SchoolRepository;
+use App\Repository\SchoolTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SchoolRepositoryTest extends KernelTestCase
 {
     private ?EntityManagerInterface $entityManager;
-    private ?City $belgrade;
-    private ?City $noviSad;
-    private ?SchoolType $elementary;
-    private ?SchoolType $highSchool;
+    private AbstractDatabaseTool $databaseTool;
+    private ?City $beograd;
+    private ?SchoolType $srednjaSkola;
+    private ?SchoolType $osnovnaSkola;
     
     protected function setUp(): void
     {
@@ -24,58 +31,28 @@ class SchoolRepositoryTest extends KernelTestCase
             ->get('doctrine')
             ->getManager();
             
-        // Create schema for SQLite in-memory database
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->entityManager);
-        $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        // Load the database tool and fixtures
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->loadFixtures();
         
-        try {
-            $schemaTool->createSchema($metadata);
-        } catch (\Exception $e) {
-            // Schema might already exist
-        }
+        // Get references to cities and school types from fixtures
+        $cityRepository = $this->entityManager->getRepository(City::class);
+        $this->beograd = $cityRepository->findOneBy(['name' => 'Beograd']);
         
-        // Create test cities
-        $this->belgrade = new City();
-        $this->belgrade->setName('Belgrade');
-        
-        $this->noviSad = new City();
-        $this->noviSad->setName('Novi Sad');
-        
-        // Create test school types
-        $this->elementary = new SchoolType();
-        $this->elementary->setName('Elementary School');
-        
-        $this->highSchool = new SchoolType();
-        $this->highSchool->setName('High School');
-        
-        // Persist cities and school types
-        $this->entityManager->persist($this->belgrade);
-        $this->entityManager->persist($this->noviSad);
-        $this->entityManager->persist($this->elementary);
-        $this->entityManager->persist($this->highSchool);
-        $this->entityManager->flush();
-        
-        // Create test schools
-        $school1 = new School();
-        $school1->setName('First Belgrade Elementary');
-        $school1->setCity($this->belgrade);
-        $school1->setType($this->elementary);
-        
-        $school2 = new School();
-        $school2->setName('Belgrade High School');
-        $school2->setCity($this->belgrade);
-        $school2->setType($this->highSchool);
-        
-        $school3 = new School();
-        $school3->setName('Novi Sad Elementary');
-        $school3->setCity($this->noviSad);
-        $school3->setType($this->elementary);
-        
-        // Persist schools
-        $this->entityManager->persist($school1);
-        $this->entityManager->persist($school2);
-        $this->entityManager->persist($school3);
-        $this->entityManager->flush();
+        $schoolTypeRepository = $this->entityManager->getRepository(SchoolType::class);
+        $this->srednjaSkola = $schoolTypeRepository->findOneBy(['name' => 'Srednja škola']);
+        $this->osnovnaSkola = $schoolTypeRepository->findOneBy(['name' => 'Osnovna škola']);
+    }
+    
+    private function loadFixtures(): void
+    {
+        // Load fixtures in the correct order:
+        // First group 1 (City and SchoolType), then group 2 (School, which depends on them)
+        $this->databaseTool->loadFixtures([
+            CityFixtures::class,
+            SchoolTypeFixtures::class,
+            SchoolFixtures::class
+        ]);
     }
     
     public function testSearchMethod(): void
@@ -91,36 +68,37 @@ class SchoolRepositoryTest extends KernelTestCase
         $this->assertArrayHasKey('current_page', $result);
         $this->assertArrayHasKey('total_pages', $result);
         
-        // Test the total count is 3 (our test schools)
-        $this->assertEquals(3, $result['total']);
+        // Test the total count is 2 (from school fixtures)
+        $this->assertEquals(2, $result['total']);
         
         // Test search with name criteria
-        $result = $schoolRepository->search(['name' => 'Elementary']);
-        $this->assertEquals(2, count($result['items']));
+        $result = $schoolRepository->search(['name' => 'Medicinska']);
+        $this->assertEquals(1, count($result['items']));
+        $this->assertEquals('Medicinska škola Beograd', $result['items'][0]->getName());
         
         // Test search with city criteria
-        $result = $schoolRepository->search(['city' => $this->belgrade]);
+        $result = $schoolRepository->search(['city' => $this->beograd]);
         $this->assertEquals(2, count($result['items']));
         
         // Test search with type criteria
-        $result = $schoolRepository->search(['type' => $this->elementary]);
-        $this->assertEquals(2, count($result['items']));
+        $result = $schoolRepository->search(['type' => $this->osnovnaSkola]);
+        $this->assertEquals(1, count($result['items']));
+        $this->assertEquals('Osnovna škola Oslobodioci Beograda', $result['items'][0]->getName());
         
         // Test combined search criteria
         $result = $schoolRepository->search([
-            'name' => 'Belgrade',
-            'city' => $this->belgrade,
-            'type' => $this->highSchool
+            'city' => $this->beograd,
+            'type' => $this->srednjaSkola
         ]);
         $this->assertEquals(1, count($result['items']));
-        $this->assertEquals('Belgrade High School', $result['items'][0]->getName());
+        $this->assertEquals('Medicinska škola Beograd', $result['items'][0]->getName());
         
         // Test pagination
-        $result = $schoolRepository->search([], 1, 2); // Page 1, limit 2
-        $this->assertEquals(2, count($result['items'])); // 2 items per page
-        $this->assertEquals(3, $result['total']); // 3 schools total
+        $result = $schoolRepository->search([], 1, 1); // Page 1, limit 1
+        $this->assertEquals(1, count($result['items'])); // 1 item per page
+        $this->assertEquals(2, $result['total']); // 2 schools total
         $this->assertEquals(1, $result['current_page']); // Current page is 1
-        $this->assertEquals(2, $result['total_pages']); // 2 pages total (3 items with 2 per page)
+        $this->assertEquals(2, $result['total_pages']); // 2 pages total (2 items with 1 per page)
     }
     
     protected function tearDown(): void
