@@ -19,6 +19,7 @@ class UserDonorType extends AbstractType
         $builder
             ->add('isMonthly', ChoiceType::class, [
                 'label' => 'Mesečna podrška',
+                'placeholder' => '',
                 'choices' => [
                     'Ne' => false,
                     'Da' => true,
