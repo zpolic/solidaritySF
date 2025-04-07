@@ -1,4 +1,4 @@
-[![Symfony Tests](../../actions/workflows/symfony.yml/badge.svg)](../../actions/workflows/symfony.yml)
+[![build](../../actions/workflows/symfony.yml/badge.svg)](../../actions/workflows/symfony.yml)
 
 # Mreža Solidarnosti
 Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku nastavnicima i vannastavnom osoblju čija je plata umanjena zbog obustave rada.
@@ -46,3 +46,11 @@ Test korisnici se automatski kreiraju pomoću [DoctrineFixturesBundle](https://s
 | korisnik@gmail.com | 12345678  | ROLE_USER    |
 | delegat@gmail.com  | 12345678  | ROLE_DELEGAT |
 | admin@gmail.com    | 12345678  | ROLE_ADMIN   |
+
+---
+
+## Hvala ❤
+
+ <a href = "https://github.com/IT-Srbija-Org/solidaritySF/graphs/contributors">
+   <img src = "https://contrib.rocks/image?repo=IT-Srbija-Org/solidaritySF"/>
+ </a>
