@@ -22,8 +22,10 @@ class DonorController extends AbstractController
     #[Route('/postani-donator', name: 'become')]
     public function edit(Request $request): Response
     {
-        $userDonor = $this->getUser()->getUserDonor() ?? new UserDonor();
-        $userDonor->setUser($this->getUser());
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $userDonor = $user->getUserDonor() ?? new UserDonor();
+        $userDonor->setUser($user);
 
         $form = $this->createForm(UserDonorType::class, $userDonor);
         $form->handleRequest($request);
