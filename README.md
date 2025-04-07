@@ -1,4 +1,13 @@
-[![build](../../actions/workflows/symfony.yml/badge.svg)](../../actions/workflows/symfony.yml)
+[![build](../../actions/workflows/build.yml/badge.svg)](../../actions/workflows/build.yml)
+
+![GitHub stars](https://img.shields.io/github/stars/IT-Srbija-Org/solidaritySF?style=social)
+![GitHub forks](https://img.shields.io/github/forks/IT-Srbija-Org/solidaritySF?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/IT-Srbija-Org/solidaritySF?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/IT-Srbija-Org/solidaritySF)
+![GitHub language count](https://img.shields.io/github/languages/count/IT-Srbija-Org/solidaritySF)
+![GitHub top language](https://img.shields.io/github/languages/top/IT-Srbija-Org/solidaritySF)
+![GitHub last commit](https://img.shields.io/github/last-commit/IT-Srbija-Org/solidaritySF?color=red)
+
 
 # Mreža Solidarnosti
 Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku nastavnicima i vannastavnom osoblju čija je plata umanjena zbog obustave rada.
