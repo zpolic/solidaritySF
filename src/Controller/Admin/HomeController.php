@@ -24,7 +24,15 @@ final class HomeController extends AbstractController
             ->andWhere('u.roles LIKE :role')
             ->setParameter('role', '%ROLE_DELEGATE%')
             ->getQuery()
-            ->getSingleScalarResult();;
+            ->getSingleScalarResult();
+
+        $qb = $entityManager->createQueryBuilder();
+        $totalAdmins = $qb->select('COUNT(u.id)')
+            ->from(User::class, 'u')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', '%ROLE_ADMIN%')
+            ->getQuery()
+            ->getSingleScalarResult();
 
         $qb = $entityManager->createQueryBuilder();
         $totalDelegatesSum = $qb->select('SUM(ud.amount)')
@@ -39,6 +47,7 @@ final class HomeController extends AbstractController
             'totalSchool' => $entityManager->getRepository(School::class)->count(),
             'totalCities' => $entityManager->getRepository(City::class)->count(),
             'totalUsers' => $entityManager->getRepository(User::class)->count(),
+            'totalAdmins' => $totalAdmins,
         ]);
     }
 }

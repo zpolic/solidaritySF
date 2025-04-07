@@ -4,3 +4,7 @@ html, body, head {
     font-weight: 400;
     font-style: normal;
 }
+
+.preview-lines {
+    background-image: repeating-linear-gradient(-45deg, var(--color-base-100), var(--color-base-100) 13px, var(--color-base-200) 13px, var(--color-base-200) 14px);
+}
