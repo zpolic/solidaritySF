@@ -1,5 +1,57 @@
 {% extends 'admin/base.html.twig' %}
 
 {% block content %}
-    pocetna stranica
+    <div class="stats bg-base-100 shadow border border-base-300 w-fit">
+        <div class="stat">
+            <div class="stat-figure text-secondary">
+                <span class="ti ti-user-heart text-4xl relative top-1"></span>
+            </div>
+            <div class="stat-title">Ukupno donora</div>
+            <div class="stat-value">{{ totalDonors }}</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-figure text-secondary">
+                <span class="ti ti-cash text-4xl relative top-1"></span>
+            </div>
+            <div class="stat-title">Ukupno skupljeno</div>
+            <div class="stat-value">{{ totalDonorsSum|number_format }}</div>
+        </div>
+    </div>
+
+    <div class="stats bg-base-100 shadow border border-base-300 w-fit">
+        <div class="stat">
+            <div class="stat-figure text-secondary">
+                <span class="ti ti-user-cog text-4xl relative top-1"></span>
+            </div>
+            <div class="stat-title">Ukupno delegata</div>
+            <div class="stat-value">{{ totalDelegate }}</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-figure text-secondary">
+                <span class="ti ti-building text-4xl relative top-1"></span>
+            </div>
+            <div class="stat-title">Ukupno skola</div>
+            <div class="stat-value">{{ totalSchool }}</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-figure text-secondary">
+                <span class="ti ti-building-community text-4xl relative top-1"></span>
+            </div>
+            <div class="stat-title">Ukupno gradova</div>
+            <div class="stat-value">{{ totalCities }}</div>
+        </div>
+    </div>
+
+    <div class="stats bg-base-100 shadow border border-base-300 w-fit">
+        <div class="stat">
+            <div class="stat-figure text-secondary">
+                <span class="ti ti-users text-4xl relative top-1"></span>
+            </div>
+            <div class="stat-title">Ukupno korisnika</div>
+            <div class="stat-value">{{ totalUsers }}</div>
+        </div>
+    </div>
 {% endblock %}
