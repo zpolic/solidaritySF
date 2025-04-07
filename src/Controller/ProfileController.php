@@ -39,6 +39,7 @@ class ProfileController extends AbstractController
     #[Route('/izmena-sifre', name: 'change_password')]
     public function changePassword(Request $request, UserPasswordHasherInterface $userPasswordHasher): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $form = $this->createForm(ProfileChangePasswordType::class, $this->getUser());
         $form->handleRequest($request);

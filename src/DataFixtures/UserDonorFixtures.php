@@ -44,6 +44,9 @@ class UserDonorFixtures extends Fixture implements FixtureGroupInterface
         $manager->flush();
     }
 
+    /**
+     * @return int[]
+     */
     public static function getGroups(): array
     {
         return [2];
