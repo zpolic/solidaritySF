@@ -39,6 +39,9 @@ class UserDelegateSchoolFixtures extends Fixture implements FixtureGroupInterfac
         $manager->flush();
     }
 
+    /**
+     * @return int[]
+     */
     public static function getGroups(): array
     {
         return [2];

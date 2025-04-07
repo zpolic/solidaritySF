@@ -5,6 +5,7 @@ namespace App\Tests\Form\Admin;
 use App\Form\Admin\DonorSearchType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Test\TypeTestCase;
 
 class DonorSearchTypeTest extends TypeTestCase
@@ -15,10 +16,16 @@ class DonorSearchTypeTest extends TypeTestCase
         
         // Check that form contains the expected fields
         $this->assertTrue($form->has('isMonthly'));
+        $this->assertTrue($form->has('firstName'));
+        $this->assertTrue($form->has('lastName'));
+        $this->assertTrue($form->has('email'));
         $this->assertTrue($form->has('submit'));
         
         // Get the form field types
         $this->assertInstanceOf(ChoiceType::class, $form->get('isMonthly')->getConfig()->getType()->getInnerType());
+        $this->assertInstanceOf(TextType::class, $form->get('firstName')->getConfig()->getType()->getInnerType());
+        $this->assertInstanceOf(TextType::class, $form->get('lastName')->getConfig()->getType()->getInnerType());
+        $this->assertInstanceOf(TextType::class, $form->get('email')->getConfig()->getType()->getInnerType());
         $this->assertInstanceOf(SubmitType::class, $form->get('submit')->getConfig()->getType()->getInnerType());
     }
     
@@ -26,6 +33,9 @@ class DonorSearchTypeTest extends TypeTestCase
     {
         $formData = [
             'isMonthly' => true,
+            'firstName' => null,
+            'lastName' => null,
+            'email' => null,
         ];
         
         $form = $this->factory->create(DonorSearchType::class);
