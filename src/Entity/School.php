@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SchoolRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,6 +38,17 @@ class School
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
+
+    /**
+     * @var Collection<int, UserDelegateSchool>
+     */
+    #[ORM\OneToMany(targetEntity: UserDelegateSchool::class, mappedBy: 'school')]
+    private Collection $userDelegateSchools;
+
+    public function __construct()
+    {
+        $this->userDelegateSchools = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -101,6 +114,36 @@ class School
     public function setUpdatedAt(): static
     {
         $this->updatedAt = new \DateTime();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserDelegateSchool>
+     */
+    public function getUserDelegateSchools(): Collection
+    {
+        return $this->userDelegateSchools;
+    }
+
+    public function addUserDelegateSchool(UserDelegateSchool $userDelegateSchool): static
+    {
+        if (!$this->userDelegateSchools->contains($userDelegateSchool)) {
+            $this->userDelegateSchools->add($userDelegateSchool);
+            $userDelegateSchool->setSchool($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserDelegateSchool(UserDelegateSchool $userDelegateSchool): static
+    {
+        if ($this->userDelegateSchools->removeElement($userDelegateSchool)) {
+            // set the owning side to null (unless already changed)
+            if ($userDelegateSchool->getSchool() === $this) {
+                $userDelegateSchool->setSchool(null);
+            }
+        }
 
         return $this;
     }

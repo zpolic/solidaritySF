@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -20,6 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLES = [
         'ROLE_USER' => 'Korisnik',
+        'ROLE_DELEGATE' => 'Delegat',
         'ROLE_ADMIN' => 'Administrator',
     ];
 
@@ -82,6 +85,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserDonor $userDonor = null;
+
+    /**
+     * @var Collection<int, UserDelegateSchool>
+     */
+    #[ORM\OneToMany(targetEntity: UserDelegateSchool::class, mappedBy: 'user')]
+    private Collection $userDelegateSchools;
+
+    public function __construct()
+    {
+        $this->userDelegateSchools = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -295,6 +309,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->userDonor = $userDonor;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserDelegateSchool>
+     */
+    public function getUserDelegateSchools(): Collection
+    {
+        return $this->userDelegateSchools;
+    }
+
+    public function addUserDelegateSchool(UserDelegateSchool $userDelegateSchool): static
+    {
+        if (!$this->userDelegateSchools->contains($userDelegateSchool)) {
+            $this->userDelegateSchools->add($userDelegateSchool);
+            $userDelegateSchool->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserDelegateSchool(UserDelegateSchool $userDelegateSchool): static
+    {
+        if ($this->userDelegateSchools->removeElement($userDelegateSchool)) {
+            // set the owning side to null (unless already changed)
+            if ($userDelegateSchool->getUser() === $this) {
+                $userDelegateSchool->setUser(null);
+            }
+        }
 
         return $this;
     }

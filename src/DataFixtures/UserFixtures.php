@@ -22,6 +22,11 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
             'email' => 'korisnik@gmail.com',
             'role' => ['ROLE_USER']
         ], [
+            'firstName' => 'Dragan',
+            'lastName' => 'Pavlovic',
+            'email' => 'delegat@gmail.com',
+            'role' => ['ROLE_USER', 'ROLE_DELEGATE']
+        ], [
             'firstName' => 'Jovan',
             'lastName' => 'Knezevic',
             'email' => 'admin@gmail.com',

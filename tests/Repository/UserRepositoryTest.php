@@ -47,8 +47,8 @@ class UserRepositoryTest extends KernelTestCase
         $this->assertArrayHasKey('current_page', $result);
         $this->assertArrayHasKey('total_pages', $result);
         
-        // Test the total count is at least 2 (from fixtures)
-        $this->assertGreaterThanOrEqual(2, $result['total']);
+        // Test the total count is at least 3 (from fixtures)
+        $this->assertGreaterThanOrEqual(3, $result['total']);
         
         // Test search with criteria matching fixture data
         $result = $userRepository->search(['firstName' => 'Marko']);

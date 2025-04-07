@@ -3,13 +3,12 @@
 namespace App\Form\Admin;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DonorSearchType extends AbstractType
+class DelegateSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -26,14 +25,6 @@ class DonorSearchType extends AbstractType
             ->add('email', TextType::class, [
                 'required' => false,
                 'label' => 'Email',
-            ])
-            ->add('isMonthly', ChoiceType::class, [
-                'required' => false,
-                'label' => 'Mesečna podrška',
-                'choices' => [
-                    'Da' => true,
-                    'Ne' => false,
-                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => '<i class="ti ti-search text-2xl"></i> Pretraži',

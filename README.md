@@ -41,7 +41,8 @@ $ ./configureProject.sh
 
 Test korisnici se automatski kreiraju pomoću [DoctrineFixturesBundle](https://symfony.com/bundles/DoctrineFixturesBundle) tokom pokretanja skripte za konfiguraciju.
 
-| Email              | Lozinka   | Privilegije |
-|--------------------|-----------|-------------|
-| korisnik@gmail.com | 12345678  | ROLE_USER   |
-| admin@gmail.com    | 12345678  | ROLE_ADMIN  |
+| Email              | Lozinka   | Privilegije  |
+|--------------------|-----------|--------------|
+| korisnik@gmail.com | 12345678  | ROLE_USER    |
+| delegat@gmail.com  | 12345678  | ROLE_DELEGAT |
+| admin@gmail.com    | 12345678  | ROLE_ADMIN   |
