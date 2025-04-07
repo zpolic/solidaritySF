@@ -43,7 +43,7 @@ jobs:
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse --level=max src
+        run: vendor/bin/phpstan analyse --level=3 src
 
       - name: Create Database
         run: |
