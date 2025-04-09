@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class DonorControllerTest extends WebTestCase
+class DelegateControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
     private AbstractDatabaseTool $databaseTool;
@@ -43,26 +43,18 @@ class DonorControllerTest extends WebTestCase
 
     public function testRedirectToLoginWhenNotAuthenticated(): void
     {
-        $this->client->request('GET', '/postani-donator');
+        $this->client->request('GET', '/postani-delegat');
 
         $this->assertTrue($this->client->getResponse()->isRedirect());
         $this->assertStringContainsString('/logovanje', $this->client->getResponse()->headers->get('Location'));
     }
 
-    public function testSubscribeDonorForm(): void
+    public function testRequestAccessForm(): void
     {
         $this->loginAsUser();
-        $this->client->request('GET', '/postani-donator');
+        $this->client->request('GET', '/postani-delegat');
 
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        $this->assertSelectorExists('form[name="user_donor"]');
-    }
-
-    public function testSuccessPageAccessible(): void
-    {
-        $this->loginAsUser();
-        $this->client->request('GET', '/uspesna-registracija-donatora');
-
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertSelectorExists('form[name="registration_delegate"]');
     }
 }
