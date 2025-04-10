@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserDelegateRequestRepository;
+use App\Validator\Phone;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,6 +31,7 @@ class UserDelegateRequest
     private ?User $user = null;
 
     #[ORM\Column(length: 50)]
+    #[Phone]
     private ?string $phone = null;
 
     #[ORM\ManyToOne(inversedBy: 'userDelegateRequests')]
