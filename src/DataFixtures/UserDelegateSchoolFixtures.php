@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\School;
 use App\Entity\User;
+use App\Entity\UserDelegateRequest;
 use App\Entity\UserDelegateSchool;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
@@ -18,21 +19,34 @@ class UserDelegateSchoolFixtures extends Fixture implements FixtureGroupInterfac
 
     public function load(ObjectManager $manager): void
     {
-        $items = [[
-            'email' => 'delegat@gmail.com',
-            'schoolName' => 'Medicinska škola Beograd',
-        ], ];
+        // Set fixed seed for deterministic results
+        mt_srand(1234);
 
-        foreach ($items as $item) {
-            $userDelegateSchool = new UserDelegateSchool();
+        // Get all confirmed delegates (delegates with confirmed requests)
+        $confirmedDelegates = $this->entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->join('u.userDelegateRequest', 'dr')
+            ->where('u.roles LIKE :role')
+            ->andWhere('dr.status = :status')
+            ->setParameter('role', '%ROLE_DELEGATE%')
+            ->setParameter('status', UserDelegateRequest::STATUS_CONFIRMED)
+            ->getQuery()
+            ->getResult();
 
-            $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $item['email']]);
-            $userDelegateSchool->setUser($user);
+        // Get all schools
+        $schools = $this->entityManager->getRepository(School::class)->findAll();
 
-            $school = $this->entityManager->getRepository(School::class)->findOneBy(['name' => $item['schoolName']]);
-            $userDelegateSchool->setSchool($school);
+        foreach ($confirmedDelegates as $delegate) {
+            // Each delegate gets 1-3 random schools
+            $schoolCount = mt_rand(1, 3);
+            $randomSchools = (array) array_rand($schools, $schoolCount);
 
-            $manager->persist($userDelegateSchool);
+            foreach ($randomSchools as $schoolIndex) {
+                $userDelegateSchool = new UserDelegateSchool();
+                $userDelegateSchool->setUser($delegate);
+                $userDelegateSchool->setSchool($schools[$schoolIndex]);
+                $manager->persist($userDelegateSchool);
+            }
         }
 
         $manager->flush();
@@ -43,6 +57,6 @@ class UserDelegateSchoolFixtures extends Fixture implements FixtureGroupInterfac
      */
     public static function getGroups(): array
     {
-        return [2];
+        return [3]; // After UserDelegateRequest fixtures
     }
 }

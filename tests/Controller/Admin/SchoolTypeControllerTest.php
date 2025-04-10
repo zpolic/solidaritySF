@@ -104,7 +104,7 @@ class SchoolTypeControllerTest extends WebTestCase
     public function testSchoolTypeEditRequiresAuthentication(): void
     {
         // Get a school type ID from fixtures
-        $schoolType = $this->schoolTypeRepository->findOneBy(['name' => 'Srednja škola']);
+        $schoolType = $this->schoolTypeRepository->findOneBy(['name' => 'Srednja stručna škola']);
         $schoolTypeId = $schoolType->getId();
 
         $this->client->request('GET', "/admin/school-type/{$schoolTypeId}/edit");
@@ -130,7 +130,7 @@ class SchoolTypeControllerTest extends WebTestCase
         $this->loginAsAdmin();
 
         // Get a school type ID from fixtures
-        $schoolType = $this->schoolTypeRepository->findOneBy(['name' => 'Srednja škola']);
+        $schoolType = $this->schoolTypeRepository->findOneBy(['name' => 'Srednja stručna škola']);
         $schoolTypeId = $schoolType->getId();
 
         $this->client->request('GET', "/admin/school-type/{$schoolTypeId}/edit");

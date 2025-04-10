@@ -4,7 +4,6 @@ namespace App\Tests\Controller\Admin;
 
 use App\DataFixtures\CityFixtures;
 use App\DataFixtures\UserFixtures;
-use App\Entity\City;
 use App\Repository\CityRepository;
 use App\Repository\UserRepository;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
@@ -105,7 +104,7 @@ class CityControllerTest extends WebTestCase
     public function testCityEditRequiresAuthentication(): void
     {
         // Get a city ID from fixtures
-        $city = $this->cityRepository->findOneBy(['name' => 'Beograd']);
+        $city = $this->cityRepository->findOneBy(['name' => 'Novi Sad']);
         $cityId = $city->getId();
 
         $this->client->request('GET', "/admin/city/{$cityId}/edit");
@@ -131,7 +130,7 @@ class CityControllerTest extends WebTestCase
         $this->loginAsAdmin();
 
         // Get a city ID from fixtures
-        $city = $this->cityRepository->findOneBy(['name' => 'Beograd']);
+        $city = $this->cityRepository->findOneBy(['name' => 'Novi Sad']);
         $cityId = $city->getId();
 
         $this->client->request('GET', "/admin/city/{$cityId}/edit");

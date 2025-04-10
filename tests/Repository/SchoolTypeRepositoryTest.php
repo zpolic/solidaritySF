@@ -42,13 +42,13 @@ class SchoolTypeRepositoryTest extends KernelTestCase
         // Test findAll method
         $result = $schoolTypeRepository->findAll();
         $this->assertIsArray($result);
-        $this->assertCount(2, $result); // Should have 2 school types from fixtures
+        $this->assertCount(3, $result); // Should have 3 school types from fixtures
 
         // Test findBy method with criteria
-        $result = $schoolTypeRepository->findBy(['name' => 'Srednja škola']);
+        $result = $schoolTypeRepository->findBy(['name' => 'Srednja stručna škola']);
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
-        $this->assertEquals('Srednja škola', $result[0]->getName());
+        $this->assertEquals('Srednja stručna škola', $result[0]->getName());
     }
 
     protected function tearDown(): void

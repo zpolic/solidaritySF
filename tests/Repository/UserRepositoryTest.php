@@ -57,8 +57,8 @@ class UserRepositoryTest extends KernelTestCase
         $result = $userRepository->search(['email' => 'admin@gmail.com']);
         $this->assertGreaterThanOrEqual(1, count($result['items']));
 
-        // Check specific user data from fixtures
-        $result = $userRepository->search(['lastName' => 'Markovic']);
+        // Check for a user with a specific email
+        $result = $userRepository->search(['email' => 'korisnik@gmail.com']);
         $this->assertEquals(1, count($result['items']));
         $this->assertEquals('korisnik@gmail.com', $result['items'][0]->getEmail());
     }

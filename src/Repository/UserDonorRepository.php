@@ -62,7 +62,7 @@ class UserDonorRepository extends ServiceEntityRepository
                 'items' => iterator_to_array($paginator),
                 'total' => count($paginator),
                 'current_page' => $page,
-                'total_pages' => ceil(count($paginator) / $limit),
+                'total_pages' => (int) ceil(count($paginator) / $limit),
             ];
         }
 

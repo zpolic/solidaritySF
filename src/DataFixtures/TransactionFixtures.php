@@ -2,9 +2,10 @@
 
 namespace App\DataFixtures;
 
+use App\DataFixtures\Data\Amounts;
 use App\Entity\Educator;
 use App\Entity\Transaction;
-use App\Entity\User;
+use App\Entity\UserDonor;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,23 +19,37 @@ class TransactionFixtures extends Fixture implements FixtureGroupInterface
 
     public function load(ObjectManager $manager): void
     {
-        $items = [[
-            'donorEmail' => 'korisnik@gmail.com',
-            'amount' => 1200,
-        ], ];
+        // Set fixed seed for deterministic results
+        mt_srand(1234);
 
-        foreach ($items as $item) {
-            $transaction = new Transaction();
+        // Get all donors and educators
+        $donors = $this->entityManager->getRepository(UserDonor::class)->findAll();
+        $educators = $this->entityManager->getRepository(Educator::class)->findAll();
 
-            $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $item['donorEmail']]);
-            $transaction->setUser($user);
+        if (empty($donors) || empty($educators)) {
+            return; // Skip if no donors or educators exist yet
+        }
 
-            $educator = $this->entityManager->getRepository(Educator::class)->findOneBy(['accountNumber' => '165000112012133333']);
-            $transaction->setEducator($educator);
+        // Each donor will make 1-5 transactions
+        foreach ($donors as $donor) {
+            $transactionCount = mt_rand(1, 5);
 
-            $transaction->setAmount($item['amount']);
-            $transaction->setAccountNumber('265104031000361092');
-            $manager->persist($transaction);
+            for ($i = 0; $i < $transactionCount; ++$i) {
+                $transaction = new Transaction();
+                $transaction->setUser($donor->getUser());
+
+                // Pick random educator
+                $educator = $educators[array_rand($educators)];
+                $transaction->setEducator($educator);
+
+                // Generate amount based on donor's monthly amount
+                $transaction->setAmount(Amounts::generate($donor->getAmount(), null, 1000, $donor->getAmount() * 2));
+
+                // Use educator's account number
+                $transaction->setAccountNumber($educator->getAccountNumber());
+
+                $manager->persist($transaction);
+            }
         }
 
         $manager->flush();
@@ -45,6 +60,6 @@ class TransactionFixtures extends Fixture implements FixtureGroupInterface
      */
     public static function getGroups(): array
     {
-        return [4];
+        return [6]; // Run last, after all other fixtures
     }
 }
