@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EducatorRepository;
+use App\Validator\Mod97;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -30,6 +31,7 @@ class Educator
     private ?int $amount = null;
 
     #[ORM\Column(length: 50, unique: true)]
+    #[Mod97]
     private ?string $accountNumber = null;
 
     #[ORM\ManyToOne(inversedBy: 'educators')]
