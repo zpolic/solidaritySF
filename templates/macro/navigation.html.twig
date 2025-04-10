@@ -6,12 +6,14 @@
         </a>
     </li>
 
-    <li>
-        <a href="{{ path('delegate_request_access') }}" class="text-lg lg:text-base px-4 py-3 lg:py-2 lg:px-3 text-red-400 hover:text-base-100 hover:bg-red-400 lg:border lg:border-red-400 {{ additional_link_classes }}">
-            <span class="ti ti-user-cog text-xl"></span>
-            Postani delegat
-        </a>
-    </li>
+    {% if not app.user or 'ROLE_DELEGATE' not in app.user.getRoles %}
+        <li>
+            <a href="{{ path('delegate_request_access') }}" class="text-lg lg:text-base px-4 py-3 lg:py-2 lg:px-3 text-red-400 hover:text-base-100 hover:bg-red-400 lg:border lg:border-red-400 {{ additional_link_classes }}">
+                <span class="ti ti-user-cog text-xl"></span>
+                Postani delegat
+            </a>
+        </li>
+    {% endif %}
 
     {% if app.user %}
         {% if 'ROLE_ADMIN' in app.user.getRoles %}
