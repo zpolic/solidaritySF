@@ -44,6 +44,24 @@ $ ./configureProject.sh
 
 3. Otvorite URL adresu u pretraživaču: http://localhost:1000
 
+4. Ako zelite podesite git hooks za proveru koda pre svakog push-a:
+```bash
+$ cp git-hooks/pre-push .git/hooks/pre-push
+$ chmod +x .git/hooks/pre-push
+```
+
+Ova podešavanja će automatski pokrenuti proveru koda pre svakog push-a:
+- Provera sintakse Twig templtes
+- Provera sintakse YAML konfiguracionih fajlova
+- Provera Symfony container-a
+- PHPStan statička analiza
+- PHP CS Fixer provera sintakse i stilskih pravila
+
+Možete i ručno pokrenuti sve provere pomoću komande:
+```bash
+$ docker exec solidarity-php-container php bin/console app:lint:all
+```
+
 ---
 
 ## Test korisnici
@@ -55,6 +73,9 @@ Test korisnici se automatski kreiraju pomoću [DoctrineFixturesBundle](https://s
 | korisnik@gmail.com | ROLE_USER    |
 | delegat@gmail.com  | ROLE_DELEGAT |
 | admin@gmail.com    | ROLE_ADMIN   |
+
+Nakon unosa email adrese, link za prijavu će biti dostupan na adresi http://localhost:1002
+(Mailcatcher servis koji hvata sve email poruke u razvojnom okruženju).
 
 ---
 
