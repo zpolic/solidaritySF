@@ -41,6 +41,11 @@ ansible
 └── vars.yml.example         # Primer konfiguracije promenljivih
 ```
 
+## Automatski Deploy preko GitHub Actions
+
+Za automatski deploy i update aplikacije koristeći GitHub Actions, pogledajte uputstvo:
+[GitHub Actions CI za Ansible Deploy](./github-actions.md)
+
 ## Preduslovi
 
 1. Instaliran Ansible na lokalnoj mašini

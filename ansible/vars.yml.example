@@ -1,7 +1,7 @@
 ---
 # Application settings
 app_root: /var/www/solidarity
-domain_name: your-domain.com
+domain_name: mrezasolidarnosti.org
 admin_email: admin@example.com
 git_repo: https://github.com/IT-Srbija-Org/solidaritySF.git
 git_branch: main
@@ -13,18 +13,20 @@ mysql_user: solidarity
 mysql_password: change_this_db_password
 
 # Redis settings
-redis_password: change_this_redis_password
+redis_host: 127.0.0.1
+redis_port: 6379
 
 # Environment settings
 app_env: prod
 app_secret: change_this_app_secret
-mailer_dsn: smtp://localhost:25
+mailer_dsn: smtp://127.0.0.1:25
 mailer_sender: noreply@mrezasolidarnosti.org
 
 # Deployment flags
 initialize_database: true
 load_fixtures: true
-enable_ssl: true
+enable_ssl: false
+enable_ufw: false
 
 # Backup settings
 backup_dir: /backup

@@ -1,4 +1,8 @@
 ---
+- name: Debug git_branch value
+  ansible.builtin.debug:
+    msg: "git_branch is {{ git_branch }}"
+
 - name: Check if application directory exists
   ansible.builtin.stat:
     path: "{{ app_root }}"
@@ -66,6 +70,7 @@
   become_user: www-data
   environment:
     COMPOSER_HOME: /var/www/.cache/composer
+    APP_ENV: "{{ app_env }}"
   tags: [deploy, app]
 
 - name: Set directory permissions

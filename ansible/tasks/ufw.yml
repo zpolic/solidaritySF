@@ -3,8 +3,9 @@
   ansible.builtin.apt:
     name: ufw
     state: present
-    update_cache: yes
+    update_cache: true
   become: true
+  when: enable_ufw
   tags: [firewall, ufw]
 
 - name: Allow SSH (port 22) through UFW
@@ -13,6 +14,7 @@
     port: 22
     proto: tcp
   become: true
+  when: enable_ufw
   tags: [firewall, ufw]
 
 - name: Allow HTTPS (port 443) through UFW
@@ -21,6 +23,7 @@
     port: 443
     proto: tcp
   become: true
+  when: enable_ufw
   tags: [firewall, ufw]
 
 - name: Enable UFW firewall with default deny policy
@@ -28,4 +31,5 @@
     state: enabled
     policy: deny
   become: true
+  when: enable_ufw
   tags: [firewall, ufw]

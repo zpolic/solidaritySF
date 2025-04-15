@@ -50,7 +50,7 @@
     - name: Application setup tasks
       ansible.builtin.include_tasks:
         file: tasks/app_setup.yml
-
+      tags: [app]
     - name: Database tasks
       ansible.builtin.include_tasks:
         file: tasks/db.yml

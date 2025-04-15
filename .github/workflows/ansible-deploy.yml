@@ -1,0 +1,63 @@
+name: Ansible Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Git branch to deploy'
+        required: false
+        default: 'main'
+      tags_app:
+        description: 'Run only code update, not full redeployment?'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  check-admin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if actor is repo admin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.actor }}
+          REPO: ${{ github.repository }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          ROLE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/$REPO/collaborators/$ACTOR/permission" | jq -r .permission)
+          if [ "$ROLE" != "admin" ]; then
+            echo "Only repository admins can manually trigger this workflow. Current role: $ROLE"
+            exit 1
+          fi
+
+  ansible-deploy:
+    runs-on: ubuntu-latest
+    needs: check-admin
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy example vars to real vars
+        run: cp ansible/vars.yml.example ansible/vars.yml
+
+      - name: Run Ansible Playbook
+        uses: dawidd6/action-ansible-playbook@v3
+        with:
+          playbook: deploy.yml
+          directory: ansible
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: |
+            [solidarity_servers]
+            ${{ secrets.DOMAIN_NAME }} ansible_user=root
+
+            [all:vars]
+            ansible_python_interpreter=/usr/bin/python3
+          options: >
+            ${{ github.event.inputs.tags_app == 'true' && '--tags app' || '' }}
+            --extra-vars "domain_name=${{ secrets.DOMAIN_NAME }}"
+            --extra-vars "mysql_root_password=${{ secrets.MYSQL_ROOT_PASSWORD }}"
+            --extra-vars "mysql_password=${{ secrets.MYSQL_PASSWORD }}"
+            --extra-vars "app_secret=${{ secrets.APP_SECRET }}"
+            --extra-vars "mailer_dsn=${{ secrets.MAILER_DSN }}"
+            --extra-vars "git_branch=${{ github.event.inputs.branch }}"

@@ -1,11 +1,10 @@
 # Redis configuration
 bind 127.0.0.1
-port 6379
+port {{ redis_port }}
 timeout 0
 tcp-keepalive 300
 
 # Security
-requirepass {{ redis_password }}
 maxmemory 256mb
 maxmemory-policy allkeys-lru
 
