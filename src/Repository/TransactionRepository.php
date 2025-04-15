@@ -28,31 +28,31 @@ class TransactionRepository extends ServiceEntityRepository
 
         if (!empty($criteria['donor'])) {
             $qb->leftJoin('t.user', 'u')
-               ->andWhere('u.email LIKE :donor')
-               ->setParameter('donor', '%'.$criteria['donor'].'%');
+                ->andWhere('u.email LIKE :donor')
+                ->setParameter('donor', '%'.$criteria['donor'].'%');
         }
 
-        $qb->leftJoin('t.educator', 'e')
-           ->leftJoin('e.school', 's');
+        $qb->leftJoin('t.damagedEducator', 'e')
+            ->leftJoin('e.school', 's');
 
         if (!empty($criteria['educator'])) {
             $qb->andWhere('e.name LIKE :educator')
-               ->setParameter('educator', '%'.$criteria['educator'].'%');
+                ->setParameter('educator', '%'.$criteria['educator'].'%');
         }
 
         if (isset($criteria['school'])) {
             $qb->andWhere('e.school = :school')
-               ->setParameter('school', $criteria['school']);
+                ->setParameter('school', $criteria['school']);
         }
 
         if (isset($criteria['city'])) {
             $qb->andWhere('s.city = :city')
-               ->setParameter('city', $criteria['city']);
+                ->setParameter('city', $criteria['city']);
         }
 
         if (isset($criteria['status'])) {
             $qb->andWhere('t.status = :status')
-               ->setParameter('status', $criteria['status']);
+                ->setParameter('status', $criteria['status']);
         }
 
         // Set the sorting
