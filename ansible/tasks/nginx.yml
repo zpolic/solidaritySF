@@ -7,7 +7,7 @@
     group: root
     mode: "0644"
   notify: Reload Nginx
-  tags: [nginx, config]
+  tags: [nginx]
 
 - name: Enable Nginx site
   ansible.builtin.file:
@@ -17,7 +17,14 @@
     owner: root
     group: root
   notify: Reload Nginx
-  tags: [nginx, config]
+  tags: [nginx]
+
+- name: Remove default Nginx site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload Nginx
+  tags: [nginx]
 
 - name: Set up SSL with Let's Encrypt
   ansible.builtin.command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos --email {{ admin_email }}

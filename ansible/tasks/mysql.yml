@@ -3,12 +3,12 @@
   ansible.builtin.command: grep password /etc/mysql/debian.cnf
   register: debian_sys_password
   changed_when: false
-  tags: [mysql, config]
+  tags: [mysql]
 
 - name: Extract password from grep result
   ansible.builtin.set_fact:
     debian_sys_pass: "{{ debian_sys_password.stdout | regex_search('password = (.*)$', '\\1') | first }}"
-  tags: [mysql, config]
+  tags: [mysql]
 
 - name: Get current MySQL root auth
   ansible.builtin.command: >
@@ -16,7 +16,7 @@
     "SELECT plugin FROM mysql.user WHERE User='root' AND Host='localhost'"
   register: mysql_root_auth
   changed_when: false
-  tags: [mysql, config]
+  tags: [mysql]
 
 - name: Check if root password matches
   ansible.builtin.command: >
@@ -24,7 +24,7 @@
   register: mysql_password_check
   ignore_errors: true
   changed_when: false
-  tags: [mysql, config]
+  tags: [mysql]
 
 - name: Reset MySQL root password
   ansible.builtin.command: >
@@ -34,7 +34,7 @@
     - mysql_root_auth.stdout != 'mysql_native_password' or
       mysql_password_check.rc != 0
   changed_when: mysql_password_check.rc != 0
-  tags: [mysql, config]
+  tags: [mysql]
 
 - name: Create .my.cnf file with root credentials
   ansible.builtin.template:
@@ -43,14 +43,14 @@
     owner: root
     group: root
     mode: "0600"
-  tags: [mysql, config]
+  tags: [mysql]
 
 - name: Create MySQL database
   community.mysql.mysql_db:
     name: "{{ mysql_database }}"
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  tags: [mysql, config]
+  tags: [mysql]
 
 - name: Create MySQL user
   community.mysql.mysql_user:
@@ -60,4 +60,4 @@
     host: localhost
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  tags: [mysql, config]
+  tags: [mysql]

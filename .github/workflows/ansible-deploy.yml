@@ -7,8 +7,8 @@ on:
         description: 'Git branch to deploy'
         required: false
         default: 'main'
-      tags_app:
-        description: 'Run only code update, not full redeployment?'
+      tags_deploy:
+        description: 'Run only code deployment, not full redeployment'
         required: false
         type: boolean
         default: true
@@ -54,7 +54,7 @@ jobs:
             [all:vars]
             ansible_python_interpreter=/usr/bin/python3
           options: >
-            ${{ github.event.inputs.tags_app == 'true' && '--tags app' || '' }}
+            ${{ github.event.inputs.tags_deploy == 'true' && '--tags deploy' || '' }}
             --extra-vars "domain_name=${{ secrets.DOMAIN_NAME }}"
             --extra-vars "mysql_root_password=${{ secrets.MYSQL_ROOT_PASSWORD }}"
             --extra-vars "mysql_password=${{ secrets.MYSQL_PASSWORD }}"

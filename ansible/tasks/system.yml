@@ -3,7 +3,7 @@
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
-  tags: [system, packages]
+  tags: [packages]
 
 - name: Install required system packages
   ansible.builtin.apt:
@@ -35,4 +35,4 @@
       - python3-certbot-nginx
       - ufw
     state: present
-  tags: [system, packages]
+  tags: [packages]

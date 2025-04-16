@@ -7,7 +7,7 @@
     group: redis
     mode: "0640"
   notify: Restart Redis
-  tags: [redis, config]
+  tags: [redis]
 
 - name: Ensure Redis service is started and enabled
   ansible.builtin.service:

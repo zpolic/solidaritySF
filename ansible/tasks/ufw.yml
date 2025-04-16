@@ -6,7 +6,7 @@
     update_cache: true
   become: true
   when: enable_ufw
-  tags: [firewall, ufw]
+  tags: [firewall]
 
 - name: Allow SSH (port 22) through UFW
   community.general.ufw:
@@ -15,7 +15,7 @@
     proto: tcp
   become: true
   when: enable_ufw
-  tags: [firewall, ufw]
+  tags: [firewall]
 
 - name: Allow HTTPS (port 443) through UFW
   community.general.ufw:
@@ -24,7 +24,7 @@
     proto: tcp
   become: true
   when: enable_ufw
-  tags: [firewall, ufw]
+  tags: [firewall]
 
 - name: Enable UFW firewall with default deny policy
   community.general.ufw:
@@ -32,4 +32,4 @@
     policy: deny
   become: true
   when: enable_ufw
-  tags: [firewall, ufw]
+  tags: [firewall]

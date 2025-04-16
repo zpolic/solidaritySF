@@ -7,19 +7,19 @@
   ansible.builtin.stat:
     path: "{{ app_root }}"
   register: app_dir
-  tags: [deploy, app]
+  tags: [deploy]
 
 - name: Remove existing application directory
   ansible.builtin.file:
     path: "{{ app_root }}"
     state: absent
   when: app_dir.stat.exists
-  tags: [deploy, app]
+  tags: [deploy]
 
 - name: Add application directory to Git safe directories
   ansible.builtin.command: git config --global --add safe.directory {{ app_root }}
   changed_when: false
-  tags: [deploy, app]
+  tags: [deploy]
 
 - name: Clone application repository
   ansible.builtin.git:
@@ -28,7 +28,7 @@
     version: "{{ git_branch }}"
     force: false
     update: true
-  tags: [deploy, app]
+  tags: [deploy]
 
 - name: Set application directory ownership
   ansible.builtin.file:
@@ -37,7 +37,7 @@
     owner: www-data
     group: www-data
     recurse: true
-  tags: [deploy, app]
+  tags: [deploy]
 
 - name: Create Composer cache directory
   ansible.builtin.file:
@@ -47,7 +47,7 @@
     group: www-data
     mode: "0755"
     recurse: true
-  tags: [deploy, app]
+  tags: [deploy]
 
 - name: Create .env.local from template
   ansible.builtin.template:
@@ -56,7 +56,7 @@
     owner: www-data
     group: www-data
     mode: "0640"
-  tags: [deploy, config]
+  tags: [deploy]
 
 - name: Install Composer dependencies
   community.general.composer:
@@ -71,7 +71,7 @@
   environment:
     COMPOSER_HOME: /var/www/.cache/composer
     APP_ENV: "{{ app_env }}"
-  tags: [deploy, app]
+  tags: [deploy]
 
 - name: Set directory permissions
   ansible.builtin.file:
@@ -84,4 +84,4 @@
   with_items:
     - var
     - public
-  tags: [deploy, permissions]
+  tags: [deploy]

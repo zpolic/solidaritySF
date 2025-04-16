@@ -10,9 +10,9 @@ Workflow podržava dva moda rada:
 
 - **Redeployment koda (code update)**: Pokreće se redovno za update aplikacionog koda (npr. novi commit na branch). Ovaj mod koristi samo `--tags app` i deploy-uje samo aplikacioni kod bez menjanja sistemskih servisa ili konfiguracija. Brži je i bezbedniji za svakodnevni rad.
 
-Izbor moda se vrši preko opcije **tags_app** prilikom pokretanja workflow-a na GitHub-u:
-- `tags_app: true` — redeployment koda (samo aplikacija, podrazumevano)
-- `tags_app: false` — full deployment (kompletan sistem)
+Izbor moda se vrši preko opcije **tags_deploy** prilikom pokretanja workflow-a na GitHub-u:
+- `tags_deploy: true` — redeployment koda (samo aplikacija, podrazumevano)
+- `tags_deploy: false` — full deployment (kompletan sistem)
 
 > **Napomena:** Samo admin repozitorijuma ima pravo da pokrene deploy workflow na GitHub-u.
 
@@ -40,7 +40,7 @@ Po potrebi dodajte i druge Secrets za varijable iz `vars.yml.example`.
 2. Izaberite workflow "Ansible Deploy".
 3. Kliknite na **Run workflow**.
 4. Unesite željeni branch (podrazumevano je `main`).
-5. Izaberite da li želite samo update aplikacije (`tags_app: true`) ili kompletan deploy (`tags_app: false`).
+5. Izaberite da li želite samo update aplikacije (`tags_deploy: true`) ili kompletan deploy (`tags_deploy: false`).
 6. Pokrenite workflow.
 
 ## Šta workflow radi
@@ -49,7 +49,7 @@ Po potrebi dodajte i druge Secrets za varijable iz `vars.yml.example`.
 - Klonira repozitorijum i priprema Ansible fajlove.
 - Kopira `vars.yml.example` u `vars.yml` i koristi vrednosti iz GitHub Secrets za sensitive podatke.
 - Pokreće Ansible playbook na serveru definisanom u `DOMAIN_NAME` secretu.
-- Po potrebi koristi samo određene tagove (`--tags app`) ili radi kompletan deploy.
+- Po potrebi koristi samo određene tagove (`--tags deploy`) ili radi kompletan deploy.
 
 ## Primer podešavanja inventara
 
