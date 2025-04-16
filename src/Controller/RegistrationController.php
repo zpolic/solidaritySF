@@ -24,6 +24,57 @@ class RegistrationController extends AbstractController
     ) {
     }
 
+    #[Route('/ponovna-verifikacija-email', name: 'resend_verification')]
+    public function resendVerification(Request $request, UserRepository $userRepository): Response
+    {
+        $email = $request->query->get('email');
+        if (!$email) {
+            $this->addFlash('error', 'Email nije prosleđen.');
+
+            return $this->redirectToRoute('login');
+        }
+
+        $user = $userRepository->findOneBy(['email' => $email]);
+        if (!$user) {
+            $this->addFlash('error', 'Korisnik sa ovom email adresom ne postoji.');
+
+            return $this->redirectToRoute('login');
+        }
+
+        if ($user->isVerified()) {
+            $this->addFlash('success', 'Vaš nalog je već verifikovan. Možete se prijaviti.');
+
+            return $this->redirectToRoute('login');
+        }
+
+        $session = $request->getSession();
+        $lastResendKey = 'last_verification_resend_'.$email;
+        $lastResend = $session->get($lastResendKey);
+        $now = new \DateTime();
+
+        if ($lastResend) {
+            $minutesSinceLastResend = ($now->getTimestamp() - $lastResend) / 60;
+            if ($minutesSinceLastResend < 5) {
+                $this->addFlash(
+                    'error',
+                    sprintf(
+                        'Molimo sačekajte još %d minuta pre nego što ponovo pošaljete verifikacioni email.',
+                        ceil(5 - $minutesSinceLastResend)
+                    )
+                );
+
+                return $this->redirectToRoute('login');
+            }
+        }
+
+        $userRepository->sendVerificationLink($user, null);
+        $session->set($lastResendKey, $now->getTimestamp());
+
+        $this->addFlash('success', 'Verifikacioni email je ponovo poslat na vašu adresu. Molimo proverite vaš inbox.');
+
+        return $this->redirectToRoute('login');
+    }
+
     #[Route('/registracija', name: 'register')]
     public function register(Request $request, UserRepository $userRepository): Response
     {

@@ -32,7 +32,7 @@ class SecurityController extends AbstractController
             }
 
             if ($user && !$user->isVerified()) {
-                $this->addFlash('error', 'Korisnik sa ovom email adresom nije verifikovan. Molimo da se verifikujete.');
+                $this->addFlash('unverified_user', $email);
 
                 return $this->redirectToRoute('login');
             }

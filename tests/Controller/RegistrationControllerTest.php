@@ -38,6 +38,77 @@ class RegistrationControllerTest extends WebTestCase
         }
     }
 
+    public function testResendVerificationWithoutEmail(): void
+    {
+        $this->client->request('GET', '/ponovna-verifikacija-email');
+        $this->client->followRedirect();
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.alert.alert-error', 'Email nije prosleđen.');
+    }
+
+    public function testResendVerificationForNonExistentUser(): void
+    {
+        $this->client->request('GET', '/ponovna-verifikacija-email', ['email' => 'nonexistent@example.com']);
+        if ($this->client->getResponse()->isRedirection()) {
+            $this->client->followRedirect();
+            $this->assertResponseIsSuccessful();
+            $this->assertSelectorTextContains('.alert.alert-error', 'Korisnik sa ovom email adresom ne postoji.');
+        } else {
+            $status = $this->client->getResponse()->getStatusCode();
+            $this->fail('Expected redirect for non-existent user, got status: '.$status);
+        }
+    }
+
+    public function testResendVerificationForVerifiedUser(): void
+    {
+        $email = 'verified@example.com';
+        $this->removeUser($email);
+
+        $userClass = $this->entityManager->getClassMetadata(\App\Entity\User::class)->getName();
+        $user = new $userClass();
+        $user->setFirstName('Verified');
+        $user->setLastName('User');
+        $user->setEmail($email);
+        $user->setIsVerified(true);
+        $user->setIsActive(true);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $this->client->request('GET', '/ponovna-verifikacija-email', ['email' => $email]);
+        $this->client->followRedirect();
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.alert.alert-success', 'Vaš nalog je već verifikovan.');
+    }
+
+    public function testResendVerificationTooFrequently(): void
+    {
+        $email = 'unverified@example.com';
+        $this->removeUser($email);
+
+        $userClass = $this->entityManager->getClassMetadata(\App\Entity\User::class)->getName();
+        $user = new $userClass();
+        $user->setFirstName('Unverified');
+        $user->setLastName('User');
+        $user->setEmail($email);
+        $user->setIsVerified(false);
+        $user->setIsActive(true);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        // First request
+        $this->client->request('GET', '/ponovna-verifikacija-email', ['email' => $email]);
+        $this->client->followRedirect();
+
+        // Second request immediately after
+        $this->client->request('GET', '/ponovna-verifikacija-email', ['email' => $email]);
+        $this->client->followRedirect();
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.alert.alert-error', 'Molimo sačekajte još');
+    }
+
     public function testRegistrationAndEmailSendAndVerification(): void
     {
         $email = 'korisnik@gmail.com';
