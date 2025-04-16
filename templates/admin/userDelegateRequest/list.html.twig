@@ -46,7 +46,7 @@
                             {{ userDelegateRequest.user.email }}
                         </a>
                     </td>
-                    <td>{{ userDelegateRequest.phone }}</td>
+                    <td>{{ userDelegateRequest.phone|phone_format }}</td>
                     <td>
                         <div>{{ userDelegateRequest.school.name }}</div>
                         <div class="text-gray-500">{{ userDelegateRequest.school.city.name }}</div>
