@@ -34,45 +34,47 @@
                     </div>
                 </div>
 
-                <table class="table rounded-xl border border-base-200">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th>ID</th>
-                            <th>
-                                <span class="ti ti-cash text-xl"></span>
-                                Cifra
-                            </th>
-                            <th>
-                                <span class="ti ti-credit-card text-xl"></span>
-                                Status
-                            </th>
-                            <th>
-                                <span class="ti ti-calendar-event text-xl"></span>
-                                Napravljeno
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% set total = 0 %}
-                    {% for transaction in transactions %}
-                        {% set total = total + transaction.amount %}
+                {% if transactions|length > 0 %}
+                    <table class="table rounded-xl border border-base-200">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th>ID</th>
+                                <th>
+                                    <span class="ti ti-cash text-xl"></span>
+                                    Cifra
+                                </th>
+                                <th>
+                                    <span class="ti ti-credit-card text-xl"></span>
+                                    Status
+                                </th>
+                                <th>
+                                    <span class="ti ti-calendar-event text-xl"></span>
+                                    Napravljeno
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% set total = 0 %}
+                        {% for transaction in transactions %}
+                            {% set total = total + transaction.amount %}
 
-                        <tr class="hover:bg-gray-100">
-                            <td>{{ transaction.id }}</td>
-                            <td>{{ transaction.amount|number_format }}</td>
-                            <td>{{ transaction.status|transactionStatus }}</td>
-                            <td>{{ transaction.createdAt|date('H:i d.m.Y.') }}</td>
-                        </tr>
-                    {% endfor %}
+                            <tr class="hover:bg-gray-100">
+                                <td>{{ transaction.id }}</td>
+                                <td>{{ transaction.amount|number_format }}</td>
+                                <td>{{ transaction.status|transactionStatus }}</td>
+                                <td>{{ transaction.createdAt|date('H:i d.m.Y.') }}</td>
+                            </tr>
+                        {% endfor %}
 
-                    <tr class="bg-gray-100 font-bold">
-                        <td>Ukupno:</td>
-                        <td>{{ total|number_format }}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        <tr class="bg-gray-100 font-bold">
+                            <td>Ukupno:</td>
+                            <td>{{ total|number_format }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                {% endif %}
             </div>
         </div>
     </div>
