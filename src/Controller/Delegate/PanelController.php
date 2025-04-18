@@ -9,6 +9,7 @@ use App\Form\DamagedEducatorEditType;
 use App\Form\DamagedEducatorSearchType;
 use App\Repository\DamagedEducatorPeriodRepository;
 use App\Repository\DamagedEducatorRepository;
+use App\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,6 +193,27 @@ class PanelController extends AbstractController
         return $this->render('delegate/delete_damaged_educator.html.twig', [
             'form' => $form->createView(),
             'damagedEducator' => $damagedEducator,
+        ]);
+    }
+
+    #[Route('/osteceni/{id}/transakcije', name: 'damaged_educator_transactions')]
+    public function damagedEducatorTransactions(DamagedEducator $damagedEducator, TransactionRepository $transactionRepository): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $allowedSchools = [];
+        foreach ($user->getUserDelegateSchools() as $delegateSchool) {
+            $allowedSchools[] = $delegateSchool->getSchool()->getId();
+        }
+
+        if (!in_array($damagedEducator->getSchool()->getId(), $allowedSchools)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('delegate/damaged_educator_transactions.html.twig', [
+            'damagedEducator' => $damagedEducator,
+            'transactions' => $transactionRepository->findBy(['damagedEducator' => $damagedEducator]),
         ]);
     }
 }
