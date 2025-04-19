@@ -56,3 +56,8 @@ mysql_users:
     password: "{{ mysql_password }}"
     priv: "{{ mysql_database }}.*:ALL"
     state: present
+
+# geerlingguy.swap
+ role variables
+# This will create a swap file of 2x the size of the total RAM
+swap_file_size_mb: "{{ ansible_memtotal_mb * 2 }}"

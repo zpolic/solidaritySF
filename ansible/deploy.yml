@@ -83,6 +83,8 @@
   roles:
     - role: geerlingguy.mysql
       tags: [mysql]
+    - role: geerlingguy.swap
+      tags: [swap]
 
   handlers:
     - name: Restart PHP-FPM
