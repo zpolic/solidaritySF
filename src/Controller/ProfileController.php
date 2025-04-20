@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Transaction;
-use App\Entity\User;
 use App\Form\ConfirmType;
 use App\Form\ProfileEditType;
 use App\Form\ProfileTransactionPaymentProofType;
 use App\Repository\TransactionRepository;
+use App\Service\InvoiceSlipService;
+use App\Service\IpsQrCodeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,8 +20,68 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class ProfileController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private InvoiceSlipService $invoiceSlipService,
+        private IpsQrCodeService $qrCodeService,
+    ) {
+    }
+
+    #[Route('/stampaj-fakturu/{id}', name: 'transaction_invoice_print', requirements: ['id' => '\d+'])]
+    public function printInvoice(Transaction $transaction): Response
     {
+        /* @var User $user */
+        $user = $this->getUser();
+        if ($transaction->getUser() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Prepare slip data and background info using the service
+        $data = $this->invoiceSlipService->prepareSlipData($transaction, $user);
+        $bgInfo = $this->invoiceSlipService->getSlipBackgroundInfo();
+
+        // Render Twig template
+        $html = $this->renderView('profile/invoice_slip.html.twig', array_merge($data, $bgInfo));
+
+        // Generate PDF with Dompdf using the service
+        $pdfContent = $this->invoiceSlipService->generatePdfFromHtml($html, $bgInfo['img_width'], $bgInfo['img_height']);
+
+        $filename = 'faktura_'.$transaction->getId().'.pdf';
+
+        return new Response(
+            $pdfContent,
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$filename.'"',
+            ]
+        );
+    }
+
+    #[Route('/qr-kod/{id}', name: 'transaction_qr', requirements: ['id' => '\d+'])]
+    public function transactionQr(Transaction $transaction): Response
+    {
+        $user = $this->getUser();
+        if ($transaction->getUser() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $paymentData = [
+            'bankAccountNumber' => $transaction->getAccountNumber(),
+            'payeeName' => $transaction->getDamagedEducator()->getName(),
+            'amount' => number_format($transaction->getAmount(), 2, ',', ''),
+            'payerName' => $user->getFullName(),
+            'paymentCode' => '289',
+            'paymentPurpose' => 'Transakcija po nalogu građana',
+        ];
+
+        $qrString = $this->qrCodeService->createIpsQrString($paymentData);
+        $qrDataUri = $this->qrCodeService->getQrCodeDataUri($qrString);
+
+        return $this->render('profile/qr_modal_content.html.twig', [
+            'qrDataUri' => $qrDataUri,
+            'transaction' => $transaction,
+        ]);
     }
 
     #[Route('/izmena-podataka', name: 'edit')]
