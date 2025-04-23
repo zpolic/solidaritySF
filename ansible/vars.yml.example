@@ -25,6 +25,9 @@ load_fixtures: true
 enable_ssl: false
 enable_ufw: false
 
+# Enable Tor exit node blocking in Nginx
+enable_tor_blocking: false
+
 # Backup settings
 backup_dir: /backup
 
@@ -55,7 +58,6 @@ mysql_users:
     priv: "{{ mysql_database }}.*:ALL"
     state: present
 
-# geerlingguy.swap
- role variables
+# geerlingguy.swap role variables
 # This will create a swap file of 2x the size of the total RAM
 swap_file_size_mb: "{{ ansible_memtotal_mb * 2 }}"
