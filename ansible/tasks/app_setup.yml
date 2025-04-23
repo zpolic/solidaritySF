@@ -84,4 +84,5 @@
   with_items:
     - var
     - public
+    - "{{ payment_proof_dir }}"
   tags: [deploy]
