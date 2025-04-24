@@ -57,14 +57,14 @@
 
                 <!-- Burger menu for small screens -->
                 <div class="flex-none lg:hidden">
-                    <div class="dropdown dropdown-end">
-                        <button class="btn btn-ghost btn-circle">
+                    <details class="dropdown dropdown-end">
+                        <summary class="btn btn-ghost btn-circle" aria-label="Open menu">
                             <span class="ti ti-menu-2 text-xl"></span>
-                        </button>
-                        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72">
+                        </summary>
+                        <ul class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72">
                             {{ nav_links('link-primary') }}
                         </ul>
-                    </div>
+                    </details>
                 </div>
             </div>
         {% endblock %}
