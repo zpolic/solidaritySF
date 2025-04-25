@@ -19,7 +19,7 @@
             {% if not period.active %}
                 <div class="alert alert-info alert-soft mt-6">
                     <span class="ti ti-info-circle text-2xl"></span>
-                    Izabrani period je zatvoren za unos, izmenu i brisanje oštećenih, jer je započeto slanje instrukcija za uplatu donatorima. Molimo Vas da ispratite sve oštećene i potvrdite kada im legne donacija.
+                    Izabrani period je zatvoren za unos i izmenu oštećenih, jer je započeto slanje instrukcija za uplatu donatorima. Molimo Vas da ispratite sve oštećene i potvrdite kada im legne donacija.
                 </div>
             {% endif %}
 
@@ -57,8 +57,9 @@
                                 </th>
                                 <th>
                                     <span class="ti ti-calendar-event text-xl"></span>
-                                    Registrovan
+                                    Kreiran
                                 </th>
+                                <th>Status</th>
                                 <th>
                                     <span class="ti ti-user-cog text-xl"></span>
                                     Delegat
@@ -75,18 +76,27 @@
                                     <div class="text-gray-500">{{ damagedEducator.school.city.name }}</div>
                                 </td>
                                 <td>{{ damagedEducator.amount|number_format }}</td>
-                                <td>{{ damagedEducator.accountNumber }}</td>
+                                <td class="whitespace-nowrap">{{ damagedEducator.accountNumber|account_number_format }}</td>
                                 <td>{{ damagedEducator.updatedAt|date('d.m.Y.') }}</td>
-                                <td>{{ damagedEducator.createdBy.fullName }}</td>
+                                <td class="whitespace-nowrap">
+                                    {{ damagedEducator.status|damaged_educator_status|raw }}
+                                </td>
+                                <td>
+                                    {% if damagedEducator.createdBy %}
+                                        {{ damagedEducator.createdBy.fullName }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <div class="flex gap-2 justify-end">
-                                        <a href="{{ path('delegate_damaged_educator_transactions', { 'id': damagedEducator.id }) }}" class="btn {% if damagedEducator.period.active %}btn-disabled{% else %}btn-primary{% endif %} btn-sm flex tooltip" data-tip="Spisak IZU">
+                                        <a href="{{ path('delegate_damaged_educator_transactions', { 'id': damagedEducator.id }) }}" class="btn {% if damagedEducator.allowToViewTransactions %}btn-primary{% else %}btn-disabled{% endif %} btn-sm flex tooltip" data-tip="Spisak IZU">
                                             <span class="ti ti-credit-card text-xl"></span>
                                         </a>
-                                        <a href="{{ path('delegate_damaged_educator_delete', { 'id': damagedEducator.id }) }}" class="btn {% if damagedEducator.period.active %}btn-error{% else %}btn-disabled{% endif %} btn-sm flex tooltip" data-tip="Brisanje">
+                                        <a href="{{ path('delegate_damaged_educator_delete', { 'id': damagedEducator.id }) }}" class="btn {% if damagedEducator.allowToDelete %}btn-error{% else %}btn-disabled{% endif %} btn-sm flex tooltip" data-tip="Brisanje">
                                             <span class="ti ti-trash text-xl"></span>
                                         </a>
-                                        <a href="{{ path('delegate_damaged_educator_edit', { 'id': damagedEducator.id }) }}" class="btn {% if damagedEducator.period.active %}btn-primary{% else %}btn-disabled{% endif %} btn-sm flex tooltip" data-tip="Izmeni">
+                                        <a href="{{ path('delegate_damaged_educator_edit', { 'id': damagedEducator.id }) }}" class="btn {% if damagedEducator.allowToEdit %}btn-primary{% else %}btn-disabled{% endif %} btn-sm flex tooltip" data-tip="Izmeni">
                                             <span class="ti ti-edit text-xl"></span>
                                         </a>
                                     </div>

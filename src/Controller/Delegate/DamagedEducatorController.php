@@ -5,7 +5,7 @@ namespace App\Controller\Delegate;
 use App\Entity\DamagedEducator;
 use App\Entity\Transaction;
 use App\Entity\User;
-use App\Form\ConfirmType;
+use App\Form\DamagedEducatorDeleteType;
 use App\Form\DamagedEducatorEditType;
 use App\Form\DamagedEducatorSearchType;
 use App\Form\TransactionChangeStatusType;
@@ -122,7 +122,7 @@ class DamagedEducatorController extends AbstractController
     #[Route('/osteceni/{id}/izmeni-podatke', name: 'edit')]
     public function editDamagedEducator(Request $request, DamagedEducator $damagedEducator, DamagedEducatorRepository $damagedEducatorRepository): Response
     {
-        if (!$damagedEducator->getPeriod()->isActive()) {
+        if (!$damagedEducator->allowToEdit()) {
             throw $this->createAccessDeniedException();
         }
 
@@ -167,9 +167,9 @@ class DamagedEducatorController extends AbstractController
     }
 
     #[Route('/osteceni/{id}/brisanje', name: 'delete')]
-    public function deleteDamagedEducator(Request $request, DamagedEducator $damagedEducator): Response
+    public function deleteDamagedEducator(Request $request, DamagedEducator $damagedEducator, TransactionRepository $transactionRepository): Response
     {
-        if (!$damagedEducator->getPeriod()->isActive()) {
+        if (!$damagedEducator->allowToDelete()) {
             throw $this->createAccessDeniedException();
         }
 
@@ -185,17 +185,28 @@ class DamagedEducatorController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $form = $this->createForm(ConfirmType::class, null, [
-            'message' => 'Potvrđujem da želim da obrišem oštećenog "'.$damagedEducator->getName().'".',
-            'submit_message' => 'Potvrdi',
-            'submit_class' => 'btn btn-error',
+        $form = $this->createForm(DamagedEducatorDeleteType::class, null, [
+            'damagedEducator' => $damagedEducator,
         ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->remove($damagedEducator);
-            $this->entityManager->flush();
+            $data = $form->getData();
+            $damagedEducator->setStatus(DamagedEducator::STATUS_DELETED);
+            $damagedEducator->setStatusComment($data['comment']);
 
+            // Cancel transactions
+            $transactions = $transactionRepository->findBy([
+                'damagedEducator' => $damagedEducator,
+                'status' => Transaction::STATUS_NEW,
+            ]);
+
+            foreach ($transactions as $transaction) {
+                $transaction->setStatus(Transaction::STATUS_CANCELLED);
+                $transaction->setStatusComment('Instruckija za uplatu je otkazana pošto je oštećeni obrisan.');
+            }
+
+            $this->entityManager->flush();
             $this->addFlash('success', 'Uspešno ste obrisali oštećenog.');
 
             return $this->redirectToRoute('delegate_damaged_educator_list', [
@@ -212,6 +223,10 @@ class DamagedEducatorController extends AbstractController
     #[Route('/osteceni/{id}/instrukcija-za-uplatu', name: 'transactions')]
     public function damagedEducatorTransactions(DamagedEducator $damagedEducator, TransactionRepository $transactionRepository): Response
     {
+        if (!$damagedEducator->allowToViewTransactions()) {
+            throw $this->createAccessDeniedException();
+        }
+
         /** @var User $user */
         $user = $this->getUser();
 

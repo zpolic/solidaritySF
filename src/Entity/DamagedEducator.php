@@ -19,6 +19,13 @@ use Doctrine\ORM\Mapping as ORM;
 class DamagedEducator
 {
     public const MONTHLY_LIMIT = 120000;
+    public const STATUS_NEW = 1;
+    public const STATUS_DELETED = 2;
+
+    public const STATUS = [
+        self::STATUS_NEW => 'DamagedEducatorNew',
+        self::STATUS_DELETED => 'DamagedEducatorDeleted',
+    ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -39,8 +46,14 @@ class DamagedEducator
     #[Mod97]
     private ?string $accountNumber = null;
 
+    #[ORM\Column]
+    private ?int $status = self::STATUS_NEW;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $statusComment = null;
+
     #[ORM\ManyToOne(inversedBy: 'damagedEducators')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn]
     private ?User $createdBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -117,6 +130,30 @@ class DamagedEducator
         return $this;
     }
 
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStatusComment(): ?string
+    {
+        return $this->statusComment;
+    }
+
+    public function setStatusComment(?string $statusComment): static
+    {
+        $this->statusComment = $statusComment;
+
+        return $this;
+    }
+
     public function getCreatedBy(): ?User
     {
         return $this->createdBy;
@@ -174,5 +211,24 @@ class DamagedEducator
         $this->period = $period;
 
         return $this;
+    }
+
+    public function allowToViewTransactions(): bool
+    {
+        return false === $this->getPeriod()->isActive();
+    }
+
+    public function allowToEdit(): bool
+    {
+        if (!$this->getPeriod()->isActive()) {
+            return false;
+        }
+
+        return self::STATUS_DELETED !== $this->status;
+    }
+
+    public function allowToDelete(): bool
+    {
+        return self::STATUS_DELETED !== $this->status;
     }
 }

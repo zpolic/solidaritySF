@@ -50,13 +50,19 @@
                             {{ userDelegateRequest.user.email }}
                         </a>
                     </td>
-                    <td>{{ userDelegateRequest.phone|phone_format }}</td>
+                    <td>
+                        {% if userDelegateRequest.phone %}
+                            {{ userDelegateRequest.phone|phone_format }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                     <td>
                         <div>{{ userDelegateRequest.school.name }}</div>
                         <div class="text-gray-500">{{ userDelegateRequest.school.city.name }}</div>
                     </td>
                     <td>{{ userDelegateRequest.createdAt|date('d.m.Y.') }}</td>
-                    <td>{{ userDelegateRequest.status|userDelegateRequestStatus|raw }}</td>
+                    <td class="whitespace-nowrap">{{ userDelegateRequest.status|user_delegate_request_status|raw }}</td>
                     <td>
                         <div class="flex gap-2 justify-end">
                             <a href="{{ path('admin_user_delegate_request_detail', { 'id': userDelegateRequest.id }) }}" class="btn btn-ghost btn-sm flex tooltip" data-tip="Detalji">
