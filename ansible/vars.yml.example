@@ -6,7 +6,8 @@ timezone: Europe/Belgrade
 # Application settings
 app_root: /var/www/solidarity
 domain_name: mrezasolidarnosti.org
-admin_email: admin@example.com
+# used for Let's Encrypt certificate generation
+admin_email: info@mrezasolidarnosti.org
 git_repo: https://github.com/IT-Srbija-Org/solidaritySF.git
 git_branch: main
 
@@ -26,8 +27,8 @@ initialize_database: true
 load_fixtures: true
 # this will install certbot and automatically configure nginx and cert renewal
 # if you want to use CF SSL, set this to false
-enable_ssl: false
-enable_ufw: false
+enable_ssl: true
+enable_ufw: true
 
 # Enable Tor exit node blocking in Nginx
 enable_tor_blocking: false
