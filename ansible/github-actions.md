@@ -32,6 +32,10 @@ Za bezbedan deploy, potrebno je da u GitHub repozitorijumu podesite sledeće Sec
 - `APP_SECRET` — aplikacioni secret
 - `MAILER_DSN` — DSN za slanje emailova
 
+**Opcionalno za naprednu kontrolu povezivanja:**
+- `SSH_HOST` — host/server na koji se deploy radi (ako nije postavljen, koristi se vrednost iz `DOMAIN_NAME`)
+- `SSH_PORT` — port za SSH konekciju (ako nije postavljen, koristi se podrazumevani port 22)
+
 Po potrebi dodajte i druge Secrets za varijable iz `vars.yml.example`.
 
 ## Pokretanje deploy-a
@@ -56,19 +60,29 @@ Po potrebi dodajte i druge Secrets za varijable iz `vars.yml.example`.
 
 ## Primer podešavanja inventara
 
-Inventar se automatski generiše iz `DOMAIN_NAME` secreta:
+Inventar se automatski generiše tokom workflow-a na osnovu sledeće logike:
+
+- Ako je postavljen `SSH_HOST`, koristi se kao host; u suprotnom koristi se `DOMAIN_NAME`.
+- Ako je postavljen `SSH_PORT`, koristi se kao port; u suprotnom koristi se 22.
+
+Primer generisanog inventara:
 
 ```ini
-[all]
-mrezasolidarnosti.org
-```
+[solidarity_servers]
+$HOST ansible_user=root ansible_port=$PORT
 
-Nije potrebno ručno menjati `inventory.ini` za GitHub Actions deploy.
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+```
+Gde su `$HOST` i `$PORT` određeni prema gore navedenoj logici.
+
+Nije potrebno ručno menjati `inventory.ini` za GitHub Actions deploy; workflow automatski generiše privremeni inventar i koristi ga sa `--inventory` opcijom.
 
 ## Napomene
 
 - Svi sensitive podaci treba da budu u GitHub Secrets, a ne u fajlovima u repozitorijumu.
 - `vars.yml` se generiše automatski na osnovu `vars.yml.example` i Secrets.
+- Inventar za deploy se generiše dinamički i koristi se putem `--inventory ansible/inventory.github.ini` opcije u workflow-u.
 - Samo admini repozitorijuma mogu ručno pokrenuti deploy workflow.
 
 Za dodatna pitanja ili probleme, pogledajte [Ansible README](./README.md) ili kontaktirajte održavaoca projekta.

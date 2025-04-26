@@ -60,6 +60,21 @@ jobs:
             echo "Ansible CLI option: (no tags option, full playbook run)"
           fi
 
+      - name: Generate dynamic inventory file for GitHub Actions
+        run: |
+          SSH_HOST="${{ secrets.SSH_HOST }}"
+          SSH_PORT="${{ secrets.SSH_PORT }}"
+          DOMAIN_NAME="${{ secrets.DOMAIN_NAME }}"
+          HOST="${SSH_HOST:-$DOMAIN_NAME}"
+          PORT="${SSH_PORT:-22}"
+          cat > ansible/inventory.github.ini <<EOF
+          [solidarity_servers]
+          $HOST ansible_user=root ansible_port=$PORT
+
+          [all:vars]
+          ansible_python_interpreter=/usr/bin/python3
+          EOF
+
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v3
         with:
@@ -67,12 +82,6 @@ jobs:
           directory: ansible
           requirements: requirements.yml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          inventory: |
-            [solidarity_servers]
-            ${{ secrets.DOMAIN_NAME }} ansible_user=root
-
-            [all:vars]
-            ansible_python_interpreter=/usr/bin/python3
           options: >
             ${{ github.event.inputs.deploy_mode == 'code-deploy' && '--tags deploy' || github.event.inputs.deploy_mode == 'no-code-deploy' && '--skip-tags deploy' || '' }}
             --extra-vars "domain_name=${{ secrets.DOMAIN_NAME }}"
@@ -80,3 +89,4 @@ jobs:
             --extra-vars "app_secret=${{ secrets.APP_SECRET }}"
             --extra-vars "mailer_dsn=${{ secrets.MAILER_DSN }}"
             --extra-vars "git_branch=${{ github.event.inputs.branch }}"
+            --inventory ansible/inventory.github.ini
