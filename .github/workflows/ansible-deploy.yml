@@ -49,6 +49,17 @@ jobs:
       - name: Copy example vars to real vars
         run: cp ansible/vars.yml.example ansible/vars.yml
 
+      - name: Show selected deploy mode
+        run: |
+          echo "Selected deploy mode: ${{ github.event.inputs.deploy_mode }}"
+          if [ "${{ github.event.inputs.deploy_mode }}" = "code-deploy" ]; then
+            echo "Ansible CLI option: --tags deploy"
+          elif [ "${{ github.event.inputs.deploy_mode }}" = "no-code-deploy" ]; then
+            echo "Ansible CLI option: --skip-tags deploy"
+          else
+            echo "Ansible CLI option: (no tags option, full playbook run)"
+          fi
+
       - name: Run Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v3
         with:
