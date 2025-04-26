@@ -6,43 +6,57 @@ Ovaj direktorijum sadrži Ansible playbook-ove i konfiguraciju za produkcijsko p
 
 ```yaml
 ansible
-├── Vagrantfile              # Vagrant konfiguracija za lokalni razvoj
-├── ansible.vagrant.cfg      # Vagrant specifična Ansible konfiguracija
-├── deploy.yml               # Glavni Ansible playbook za deploy
-├── inventory.ini            # Inventar servera (nije u git-u)
-├── inventory.ini.example    # Primer inventara servera
-├── manual.md                # Detaljan vodič za ručno podizanje servera
-├── README.md                # Ovaj fajl
-├── roles/                   # Ansible roles (ako se koriste)
-├── tasks/                   # Ansible task fajlovi (modularni koraci deploy-a)
-│   ├── system.yml           # Taskovi za sistemske pripreme i update
-│   ├── php.yml              # Taskovi za instalaciju i konfiguraciju PHP-a
-│   ├── nginx.yml            # Taskovi za instalaciju i konfiguraciju Nginx-a
-│   ├── redis.yml            # Taskovi za instalaciju i konfiguraciju Redis-a
-│   ├── app_setup.yml        # Taskovi za setup aplikacije
-│   ├── backup.yml           # Taskovi za backup baze
-│   ├── cache.yml            # Taskovi za čišćenje symfony cache-a
-│   ├── db.yml               # Taskovi za symfony komande oko konfiguracija baze
-│   ├── ssh_hardening.yml    # Taskovi za hardening SSH-a
-│   └── ufw.yml              # Taskovi za firewall
-├── templates/               # Jinja2 šabloni za konfiguracione fajlove
-│   ├── etc/                 # Šabloni za /etc konfiguracije
-│   │   ├── nginx/                           # Nginx konfiguracije
+├── Vagrantfile                # Vagrant konfiguracija za lokalni razvoj
+├── ansible.vagrant.cfg        # Vagrant specifična Ansible konfiguracija
+├── deploy.yml                 # Glavni Ansible playbook za deploy
+├── files/                     # Statički fajlovi za deploy na server
+│   ├── etc/
+│   │   ├── cron.d/
+│   │   │   └── update-tor-blocklist      # Cron job za ažuriranje Tor block liste
+│   │   └── nginx/
+│   │       └── conf.d/
+│   │           └── tor-blocking.conf     # Nginx konfiguracija za blokiranje Tor izlaznih čvorova
+│   └── usr/
+│       └── local/
+│           └── bin/
+│               └── update-tor-blocklist.sh # Bash skripta za ažuriranje Tor block liste
+├── github-actions.md           # Uputstvo za CI/CD deploy preko GitHub Actions
+├── inventory.ini               # Inventar servera (nije u git-u)
+├── inventory.ini.example       # Primer inventara servera
+├── README.md                   # Ovaj fajl
+├── requirements.yml            # Spisak Ansible Galaxy rola
+├── tasks/                      # Ansible task fajlovi (modularni koraci deploy-a)
+│   ├── app_setup.yml           # Taskovi za setup aplikacije
+│   ├── backup.yml              # Taskovi za backup baze
+│   ├── cache.yml               # Taskovi za čišćenje symfony cache-a
+│   ├── db.yml                  # Taskovi za symfony komande oko konfiguracija baze
+│   ├── nginx.yml               # Taskovi za instalaciju i konfiguraciju Nginx-a
+│   ├── php.yml                 # Taskovi za instalaciju i konfiguraciju PHP-a
+│   ├── redis.yml               # Taskovi za instalaciju i konfiguraciju Redis-a
+│   ├── ssh_hardening.yml       # Taskovi za hardening SSH-a
+│   ├── system.yml              # Taskovi za sistemske pripreme i update
+│   └── ufw.yml                 # Taskovi za firewall
+├── templates/                  # Jinja2 šabloni za konfiguracione fajlove
+│   ├── etc/
+│   │   ├── cron.d/
+│   │   │   ├── cancelled-transaction.j2         # Cron za otkazane transakcije
+│   │   │   └── create-damaged-educator-period.j2 # Cron za periodično kreiranje oštećenih edukatora
+│   │   ├── nginx/
 │   │   │   └── sites-available/
-│   │   │       └── solidarity.j2            # Nginx vhost za aplikaciju
-│   │   ├── php/                             # PHP konfiguracije
+│   │   │       └── solidarity.j2                # Nginx vhost za aplikaciju
+│   │   ├── php/
 │   │   │   └── 8.3/
 │   │   │       └── fpm/
 │   │   │           └── conf.d/
-│   │   │               └── custom.ini.j2    # Custom PHP FPM podešavanja
+│   │   │               └── custom.ini.j2        # Custom PHP FPM podešavanja
 │   │   └── redis/
-│   │       └── redis.conf.j2                # Redis konfiguracija
+│   │       └── redis.conf.j2                    # Redis konfiguracija
 │   └── var/
 │       └── www/
 │           └── solidarity/
-│               └── .env.local.j2            # Šablon za .env.local aplikacije
-├── vars.yml                  # Glavna fajl sa konfiguracijom promenljivih (nije u git-u)
-└── vars.yml.example          # Primer konfiguracije promenljivih
+├── vars.yml                    # Glavna fajl sa konfiguracijom promenljivih (nije u git-u)
+├── vars.yml-bk                 # Backup varijanti konfiguracije promenljivih
+└── vars.yml.example            # Primer konfiguracije promenljivih
 ```
 
 ## Automatski Deploy preko GitHub Actions

@@ -1,4 +1,21 @@
 ---
+- name: Fail if OS is not Ubuntu
+  ansible.builtin.fail:
+    msg: "OS not supported"
+  when:
+    - ansible_distribution != 'Ubuntu'
+  tags: [always]
+
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: "{{ hostname | default('my-server') | replace('.', '-') }}"
+  tags: [setup]
+
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+  tags: [setup]
+
 - name: Add PHP repository for Ubuntu 22.04
   ansible.builtin.apt_repository:
     repo: ppa:ondrej/php
@@ -52,6 +69,30 @@
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
+  tags: [packages]
+
+- name: Upgrade all apt packages
+  ansible.builtin.apt:
+    upgrade: dist
+    force_apt_get: yes
+  tags: [packages]
+
+- name: Check if a reboot is needed
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+    get_checksum: no
+  register: reboot_required_file
+  tags: [packages]
+
+- name: Reboot if kernel is updated
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible for kernel updates"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
+  when: reboot_required_file.stat.exists
   tags: [packages]
 
 - name: Install required system packages

@@ -32,7 +32,7 @@
     - name: Include system tasks
       ansible.builtin.include_tasks:
         file: tasks/system.yml
-      tags: [packages]
+      tags: [packages, setup]
 
     - name: Configure UFW firewall (SSH/HTTPS)
       ansible.builtin.include_tasks:
