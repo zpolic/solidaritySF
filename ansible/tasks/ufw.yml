@@ -17,6 +17,15 @@
   when: enable_ufw
   tags: [firewall]
 
+- name: Allow HTTPS (port 80) through UFW
+  community.general.ufw:
+    rule: allow
+    port: 80
+    proto: tcp
+  become: true
+  when: enable_ufw
+  tags: [firewall]
+
 - name: Allow HTTPS (port 443) through UFW
   community.general.ufw:
     rule: allow
