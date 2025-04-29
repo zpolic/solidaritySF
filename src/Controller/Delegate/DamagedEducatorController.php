@@ -69,8 +69,14 @@ class DamagedEducatorController extends AbstractController
         $user = $this->getUser();
 
         $criteria['schools'] = [];
+        $showImport = false;
+
         foreach ($user->getUserDelegateSchools() as $delegateSchool) {
             $criteria['schools'][] = $delegateSchool->getSchool()->getId();
+
+            if ($delegateSchool->getSchool()->showImport()) {
+                $showImport = true;
+            }
         }
 
         $criteria['period'] = $period;
@@ -78,6 +84,7 @@ class DamagedEducatorController extends AbstractController
 
         return $this->render('delegate/damagedEducator/list.html.twig', [
             'damagedEducators' => $damagedEducatorRepository->search($criteria, $page),
+            'showImport' => $showImport,
             'period' => $period,
             'form' => $form->createView(),
         ]);
@@ -151,7 +158,7 @@ class DamagedEducatorController extends AbstractController
             $errors = [];
             $this->entityManager->beginTransaction();
 
-            for ($row = 1; $row <= $totalRows; ++$row) {
+            for ($row = 2; $row <= $totalRows; ++$row) {
                 $rowData = $worksheet->rangeToArray('A'.$row.':'.$worksheet->getHighestColumn().$row, null, true, false)[0];
 
                 $damagedEducator = new DamagedEducator();
