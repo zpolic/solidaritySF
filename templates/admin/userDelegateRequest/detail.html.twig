@@ -123,6 +123,23 @@
 
                         <div>{{ userDelegateRequest.school.name }}</div>
                     </div>
+                    <div>
+                        <div class="text-sm text-gray-500">
+                            <span class="ti ti-user"></span>
+                            Postojeći delegati u ovoj školi
+                        </div>
+                        {% if existingDelegates %}
+                            {% for item in existingDelegates %}
+                                <div>
+                                    <a target="_blank" href="{{ path('admin_user_edit', { 'id': item.user.id }) }}">
+                                        {{ item.user.fullName }}
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            Nema postojećih delegata u ovoj školi
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
