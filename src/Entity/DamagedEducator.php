@@ -4,9 +4,8 @@ namespace App\Entity;
 
 use App\Repository\DamagedEducatorRepository;
 use App\Validator as CustomAssert;
-use App\Validator\InvalidAccountNumber;
-use App\Validator\Mod97;
 use App\Validator\MonthlyLimit;
+use App\Validator\ValidateAccountNumber;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -49,8 +48,7 @@ class DamagedEducator
 
     #[Assert\NotBlank(message: 'Broj računa je obavezno polje')]
     #[ORM\Column(length: 50)]
-    #[Mod97]
-    #[InvalidAccountNumber]
+    #[ValidateAccountNumber]
     private ?string $accountNumber = null;
 
     #[ORM\Column]
