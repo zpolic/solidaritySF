@@ -41,17 +41,23 @@ class ExpiredTransactionsCommand extends Command
         $comment = 'Instruckija za uplatu je automatski istekla jer je prošlo više od 72 sata.';
 
         while (true) {
-            $items = $this->getItems();
-            if (empty($items)) {
+            $transactions = $this->getTransactions();
+            if (empty($transactions)) {
                 break;
             }
 
-            foreach ($items as $item) {
-                $io->comment('Transaction ID: '.$item->getId());
+            foreach ($transactions as $transaction) {
+                $io->comment('Transaction ID: '.$transaction->getId());
+                $status = Transaction::STATUS_EXPIRED;
 
-                $item->setStatus(Transaction::STATUS_EXPIRED);
-                $item->setStatusComment($comment);
-                $this->entityManager->persist($item);
+                $user = $transaction->getUser();
+                if (!$user->getLastVisit() || $user->getLastVisit() < $transaction->getCreatedAt()) {
+                    $status = Transaction::STATUS_NOT_PAID;
+                }
+
+                $transaction->setStatus($status);
+                $transaction->setStatusComment($comment);
+                $this->entityManager->persist($transaction);
             }
 
             $this->entityManager->flush();
@@ -62,7 +68,7 @@ class ExpiredTransactionsCommand extends Command
         return Command::SUCCESS;
     }
 
-    public function getItems(): array
+    public function getTransactions(): array
     {
         $qb = $this->entityManager->createQueryBuilder();
 
