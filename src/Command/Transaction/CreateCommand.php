@@ -185,7 +185,8 @@ class CreateCommand extends Command
               0) AS transactionSum
             FROM damaged_educator AS de
              INNER JOIN damaged_educator_period AS dep ON dep.id = de.period_id
-            WHERE dep.active = 1
+            WHERE dep.active = 0
+             AND dep.processing = 1
              AND de.status = :status
             HAVING transactionSum < de.amount
             ORDER BY de.id ASC
