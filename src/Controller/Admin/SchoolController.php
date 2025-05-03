@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\School;
 use App\Form\Admin\SchoolEditType;
 use App\Form\Admin\SchoolSearchType;
+use App\Repository\DamagedEducatorPeriodRepository;
 use App\Repository\SchoolRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,6 +39,22 @@ final class SchoolController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}', name: 'details', requirements: ['id' => '\d+'])]
+    public function details(School $school, DamagedEducatorPeriodRepository $periodRepository, SchoolRepository $schoolRepository): Response
+    {
+        $periods = $periodRepository->findAll();
+        $statistics = [];
+
+        foreach ($periods as $period) {
+            $statistics[] = $schoolRepository->getStatistics($period, $school);
+        }
+
+        return $this->render('admin/school/details.html.twig', [
+            'school' => $school,
+            'statistics' => $statistics,
+        ]);
+    }
+
     #[Route('/new', name: 'new')]
     public function new(Request $request): Response
     {
@@ -59,7 +76,7 @@ final class SchoolController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit')]
+    #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'])]
     public function edit(Request $request, School $school): Response
     {
         $form = $this->createForm(SchoolEditType::class, $school);

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\DamagedEducatorPeriod;
 use App\Entity\School;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -12,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SchoolRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private TransactionRepository $transactionRepository, private DamagedEducatorRepository $damagedEducatorRepository)
     {
         parent::__construct($registry, School::class);
     }
@@ -64,6 +65,26 @@ class SchoolRepository extends ServiceEntityRepository
             'total' => count($query->getResult()),
             'current_page' => 1,
             'total_pages' => 1,
+        ];
+    }
+
+    public function getStatistics(DamagedEducatorPeriod $period, School $school): array
+    {
+        $sumAmountConfirmedTransactions = $this->transactionRepository->getSumAmountConfirmedTransactions($period, $school);
+        $totalDamagedEducators = $this->damagedEducatorRepository->count(['period' => $period, 'school' => $school]);
+
+        $averageAmountPerDamagedEducator = 0;
+        if ($sumAmountConfirmedTransactions > 0 && $totalDamagedEducators > 0) {
+            $averageAmountPerDamagedEducator = floor($sumAmountConfirmedTransactions / $totalDamagedEducators);
+        }
+
+        return [
+            'schoolEntity' => $school,
+            'periodEntity' => $period,
+            'totalDamagedEducators' => $this->damagedEducatorRepository->count(['period' => $period, 'school' => $school]),
+            'sumAmount' => $this->damagedEducatorRepository->getSumAmount($period, $school),
+            'sumAmountConfirmedTransactions' => $sumAmountConfirmedTransactions,
+            'averageAmountPerDamagedEducator' => $averageAmountPerDamagedEducator,
         ];
     }
 }
