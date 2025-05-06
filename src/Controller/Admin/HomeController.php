@@ -38,11 +38,14 @@ final class HomeController extends AbstractController
                 ->from(DamagedEducator::class, 'de')
                 ->andWhere('de.period = :period')
                 ->setParameter('period', $pData)
+                ->andWhere('de.status = :status')
+                ->setParameter('status', DamagedEducator::STATUS_NEW)
                 ->getQuery()
                 ->getSingleScalarResult();
 
-            $sumAmountWaitingConfirmationTransactions = $transactionRepository->getSumAmountTransactions($pData, null, Transaction::STATUS_WAITING_CONFIRMATION);
-            $sumAmountConfirmedTransactions = $transactionRepository->getSumAmountTransactions($pData, null, Transaction::STATUS_CONFIRMED);
+            $sumAmountNewTransactions = $transactionRepository->getSumAmountTransactions($pData, null, [Transaction::STATUS_NEW]);
+            $sumAmountWaitingConfirmationTransactions = $transactionRepository->getSumAmountTransactions($pData, null, [Transaction::STATUS_WAITING_CONFIRMATION, Transaction::STATUS_EXPIRED]);
+            $sumAmountConfirmedTransactions = $transactionRepository->getSumAmountTransactions($pData, null, [Transaction::STATUS_CONFIRMED]);
             $totalDamagedEducators = $entityManager->getRepository(DamagedEducator::class)->count(['period' => $pData]);
             $averageAmountPerDamagedEducator = 0;
 
@@ -54,6 +57,7 @@ final class HomeController extends AbstractController
                 'entity' => $pData,
                 'totalDamagedEducators' => $totalDamagedEducators,
                 'sumAmountDamagedEducators' => $sumAmountDamagedEducators,
+                'sumAmountNewTransactions' => $sumAmountNewTransactions,
                 'sumAmountWaitingConfirmationTransactions' => $sumAmountWaitingConfirmationTransactions,
                 'sumAmountConfirmedTransactions' => $sumAmountConfirmedTransactions,
                 'averageAmountPerDamagedEducator' => $averageAmountPerDamagedEducator,
