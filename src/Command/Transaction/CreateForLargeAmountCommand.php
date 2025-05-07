@@ -5,6 +5,7 @@ namespace App\Command\Transaction;
 use App\Entity\DamagedEducator;
 use App\Entity\Transaction;
 use App\Entity\UserDonor;
+use App\Repository\TransactionRepository;
 use App\Repository\UserDonorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,7 +28,7 @@ class CreateForLargeAmountCommand extends Command
     private int $maxYearDonationAmount = 80000;
     private array $damagedEducators = [];
 
-    public function __construct(private EntityManagerInterface $entityManager, private UserDonorRepository $userDonorRepository)
+    public function __construct(private EntityManagerInterface $entityManager, private UserDonorRepository $userDonorRepository, private TransactionRepository $transactionRepository)
     {
         parent::__construct();
     }
@@ -168,20 +169,11 @@ class CreateForLargeAmountCommand extends Command
         ];
 
         $stmt = $this->entityManager->getConnection()->executeQuery('
-            SELECT de.id, de.period_id, de.account_number, de.amount,
-             COALESCE(
-              (SELECT SUM(amount)
-               FROM transaction
-               WHERE damaged_educator_id = de.id
-                AND status IN ('.implode(',', $transactionStatuses).')),
-              0) AS transactionSum
+            SELECT de.id, de.period_id, de.account_number, de.amount
             FROM damaged_educator AS de
              INNER JOIN damaged_educator_period AS dep ON dep.id = de.period_id
-            WHERE dep.active = 0
              AND dep.processing = 1
-             AND de.status = :status
-            HAVING transactionSum < de.amount
-            ORDER BY de.id ASC
+            WHERE de.status = :status
             ', [
             'status' => DamagedEducator::STATUS_NEW,
         ]);
@@ -192,12 +184,12 @@ class CreateForLargeAmountCommand extends Command
                 $item['amount'] = $this->maxDonationAmount;
             }
 
-            $item['remainingAmount'] = $item['amount'] - $item['transactionSum'];
+            $transactionSum = $this->transactionRepository->getSumAmountForAccountNumber($item['period_id'], $item['account_number'], $transactionStatuses);
+            $item['remainingAmount'] = $item['amount'] - $transactionSum;
             if ($item['remainingAmount'] < $this->minTransactionDonationAmount) {
                 continue;
             }
 
-            unset($item['transactionSum']);
             $items[$item['id']] = $item;
         }
 
