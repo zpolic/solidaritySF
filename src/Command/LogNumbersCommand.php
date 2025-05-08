@@ -3,7 +3,6 @@
 namespace App\Command;
 
 use App\Entity\LogNumber;
-use App\Repository\UserDelegateSchoolRepository;
 use App\Repository\UserDonorRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +20,7 @@ use Symfony\Component\Lock\Store\FlockStore;
 )]
 class LogNumbersCommand extends Command
 {
-    public function __construct(private EntityManagerInterface $entityManager, private UserDonorRepository $userDonorRepository, private UserRepository $userRepository, private UserDelegateSchoolRepository $userDelegateSchoolRepository)
+    public function __construct(private EntityManagerInterface $entityManager, private UserDonorRepository $userDonorRepository, private UserRepository $userRepository)
     {
         parent::__construct();
     }
@@ -44,7 +43,7 @@ class LogNumbersCommand extends Command
         $sumAmountMonthlyDonors = $this->userDonorRepository->sumAmountMonthlyDonors();
         $sumAmountNonMonthlyDonors = $this->userDonorRepository->sumAmountNonMonthlyDonors();
         $totalDelegates = $this->userRepository->getTotalDelegates();
-        $totalActiveSchools = $this->userDelegateSchoolRepository->getTotalActiveSchools(null);
+        $totalActiveSchools = 0;
 
         $entity = $this->entityManager->getRepository(LogNumber::class)->findOneBy(['createdAt' => new \DateTime()]);
         if (!$entity) {
