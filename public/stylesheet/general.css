@@ -21,6 +21,11 @@ table thead span.ti {
     .responsive-table thead {
         display: none;
     }
+    .overflow-x-auto,
+    .responsive-table {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
     .responsive-table {
         border: none !important;
         border-radius: 0 !important;
@@ -60,12 +65,11 @@ table thead span.ti {
         content: attr(data-label);
         position: static;
         display: inline-block;
-        min-width: 7.5em;
+        min-width: 6em;
         font-weight: 600;
         color: #6b7280;
         white-space: normal;
-        font-size: 1.2em;
-        padding-right: 0.5rem;
+        padding-right: 0.2rem;
         text-align: left;
         flex-shrink: 0;
     }
@@ -74,5 +78,14 @@ table thead span.ti {
     }
     .responsive-table td[data-label=""] {
         justify-content: center;
+        align-items: stretch;
+    }
+
+    /* Stack action buttons vertically in transaction list on mobile */
+    .responsive-table td > .flex {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+        width: 100%;
     }
 }
