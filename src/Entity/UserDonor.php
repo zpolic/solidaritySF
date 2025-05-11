@@ -25,7 +25,10 @@ class UserDonor
 
     #[ORM\Column]
     private ?int $amount = null;
-
+    
+    #[ORM\Column]
+    private ?int $how = null;
+    
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
 
@@ -72,6 +75,18 @@ class UserDonor
     public function setAmount(int $amount): static
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getHow(): ?int
+    {
+        return $this->how;
+    }
+
+    public function setHow(int $how): static
+    {
+        $this->how = $how;
 
         return $this;
     }

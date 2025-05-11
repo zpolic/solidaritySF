@@ -35,6 +35,18 @@ class DonorSearchType extends AbstractType
                     'Ne' => false,
                 ],
             ])
+            ->add('how', ChoiceType::class, [
+                'required' => false,
+                'multiple' => false,
+                'label' => 'Kako ste saznali?',
+                'choices' => [
+                    'Čuo/la sam na televiziji' => 1,
+                    'Saznao/la preko društvenih mreža' => 2,
+                    'Preko člana porodice/prijatelja' => 3,
+                    'Preko news portala / foruma / Reditta' => 4,
+                    'Preko škole, fakulteta…' => 5,
+                ],
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => '<i class="ti ti-search text-2xl"></i> Pretraži',
                 'label_html' => true,

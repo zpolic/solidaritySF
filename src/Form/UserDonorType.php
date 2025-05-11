@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -33,6 +34,16 @@ class UserDonorType extends AbstractType
                 'attr' => [
                     'placeholder' => '500',
                     'min' => 500,
+                ],
+            ])
+            ->add('how', ChoiceType::class, [
+                'label' => 'Kako ste saznali za Mrežu Solidarnosti?',
+                'choices' => [
+                    'Čuo/la sam na televiziji' => 1,
+                    'Saznao/la preko društvenih mreža' => 2,
+                    'Preko člana porodice/prijatelja' => 3,
+                    'Preko news portala / foruma / Reditta' => 4,
+                    'Preko škole, fakulteta…' => 5,
                 ],
             ])
             ->add('comment', TextareaType::class, [

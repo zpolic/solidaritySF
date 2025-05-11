@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -37,6 +38,16 @@ class DonorEditType extends AbstractType
                 'attr' => [
                     'placeholder' => '500',
                     'min' => 500,
+                ],
+            ])
+            ->add('how', ChoiceType::class, [
+                'label' => 'Kako ste saznali za Mrežu Solidarnosti?',
+                'choices' => [
+                    'Čuo/la sam na televiziji' => 1,
+                    'Saznao/la preko društvenih mreža' => 2,
+                    'Preko člana porodice/prijatelja' => 3,
+                    'Preko news portala / foruma / Reditta' => 4,
+                    'Preko škole, fakulteta…' => 5,
                 ],
             ])
             ->add('submit', SubmitType::class, [

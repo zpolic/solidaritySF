@@ -28,6 +28,10 @@
                         Iznos
                     </th>
                     <th>
+                        <span class="ti ti-how text-xl"></span>
+                        Kako ste saznali?
+                    </th>
+                    <th>
                         <span class="ti ti-calendar-event text-xl"></span>
                         Datum
                     </th>
@@ -54,6 +58,7 @@
                         {% endif %}
                     </td>
                     <td>{{ donor.amount|number_format }}</td>
+                    <td>{{ donor.how|number_format }}</td>
                     <td class="whitespace-nowrap">{{ donor.updatedAt|date('H:i d.m.Y.') }}</td>
                     <td>
                         <div class="flex gap-2 justify-end">
