@@ -41,7 +41,7 @@ class DonorEditType extends AbstractType
                 ],
             ])
             ->add('how', ChoiceType::class, [
-                'label' => 'Kako ste saznali za Mrežu Solidarnosti?',
+                'required' => false,
                 'choices' => [
                     'Čuo/la sam na televiziji' => 1,
                     'Saznao/la preko društvenih mreža' => 2,
@@ -49,6 +49,7 @@ class DonorEditType extends AbstractType
                     'Preko news portala / foruma / Reditta' => 4,
                     'Preko škole, fakulteta…' => 5,
                 ],
+                'label' => 'Kako ste saznali za Mrežu Solidarnosti?',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Sačuvaj',

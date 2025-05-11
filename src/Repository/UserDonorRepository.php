@@ -140,8 +140,14 @@ class UserDonorRepository extends ServiceEntityRepository
         }
 
         if (!empty($criteria['how'])) {
-            $qb->andWhere('ud.how = :how')
+            
+            if($criteria['how'] == -1) {
+                $qb->andWhere('ud.how is NULL');    
+            } else {
+                $qb->andWhere('ud.how = :how')
                 ->setParameter('how', $criteria['how']);
+            }
+            
         }
 
         // Set the sorting

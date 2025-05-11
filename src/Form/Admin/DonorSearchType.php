@@ -40,6 +40,7 @@ class DonorSearchType extends AbstractType
                 'multiple' => false,
                 'label' => 'Kako ste saznali?',
                 'choices' => [
+                    '-' => -1,
                     'Čuo/la sam na televiziji' => 1,
                     'Saznao/la preko društvenih mreža' => 2,
                     'Preko člana porodice/prijatelja' => 3,
