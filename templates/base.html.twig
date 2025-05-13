@@ -12,10 +12,11 @@
         <meta name="description" content="Mreža solidarnosti je inicijativa IT Srbije za direktnu finansijsku podršku nastavnicima i vannastavnom osoblju čija je plata umanjena zbog obustave rada. Pridruži se, doniraj i podrži one koji se bore za bolje obrazovanje!">
         <meta name="keywords" content="Mreža solidarnosti, IT Srbija, prosveta, donacije, podrška nastavnicima, solidarnost, pomoć nastavnicima, obustava rada, direktna podrška">
 
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
-        <link rel="icon" type="image/png" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" type="image/png" href="{{ asset('favicon-96x96.png') }}" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}" />
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}" />
+        <meta name="apple-mobile-web-app-title" content="{{ block('title') }}" />
         <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
         <meta property="og:type" content="website">
@@ -57,7 +58,7 @@
             <div class="navbar bg-base-100 shadow-sm px-10 py-5">
                 <div class="flex-1 align-middle">
                     <a href="{{ path('home') }}">
-                        <img src="{{ asset('image/logo.svg') }}" alt="Logo" class="w-12 h-12 rounded-lg bg-base-100">
+                        <img src="{{ asset('image/logo.svg') }}" alt="Logo" class="w-42 rounded-lg bg-base-100">
                     </a>
                 </div>
 
@@ -87,7 +88,7 @@
         {% block footer %}
             <div class="mt-10 pb-10">
                 <a href="https://itsrbija.org">
-                    <img src="{{ asset('image/logo.svg') }}" alt="IT Srbija logo" class="mx-auto w-12 h-12 rounded-lg bg-base-100">
+                    <img src="{{ asset('image/logo-itsrbija.svg') }}" alt="IT Srbija logo" class="mx-auto w-12 h-12 rounded-lg bg-base-100 transition duration-200 hover:scale-110">
                 </a>
             </div>
         {% endblock %}
