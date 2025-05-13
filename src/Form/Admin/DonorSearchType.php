@@ -2,6 +2,7 @@
 
 namespace App\Form\Admin;
 
+use App\Entity\UserDonor;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -13,6 +14,9 @@ class DonorSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $comesFrom = array_flip(UserDonor::COMES_FROM);
+        $comesFromExtended = array('-' => -1) + $comesFrom;
+        
         $builder
             ->setMethod('GET')
             ->add('firstName', TextType::class, [
@@ -35,18 +39,11 @@ class DonorSearchType extends AbstractType
                     'Ne' => false,
                 ],
             ])
-            ->add('how', ChoiceType::class, [
+            ->add('comesFrom', ChoiceType::class, [
                 'required' => false,
                 'multiple' => false,
-                'label' => 'Kako ste saznali?',
-                'choices' => [
-                    '-' => -1,
-                    'Čuo/la sam na televiziji' => 1,
-                    'Saznao/la preko društvenih mreža' => 2,
-                    'Preko člana porodice/prijatelja' => 3,
-                    'Preko news portala / foruma / Reditta' => 4,
-                    'Preko škole, fakulteta…' => 5,
-                ],
+                'choices' => $comesFromExtended,
+                'label' => 'Kako ste saznali za Mrežu solidarnosti?',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => '<i class="ti ti-search text-2xl"></i> Pretraži',

@@ -29,7 +29,7 @@
                     </th>
                     <th>
                         <span class="ti ti-how text-xl"></span>
-                        Kako ste saznali?
+                        Kako ste saznali za Mrežu solidarnosti?
                     </th>
                     <th>
                         <span class="ti ti-calendar-event text-xl"></span>
@@ -59,18 +59,10 @@
                     </td>
                     <td>{{ donor.amount|number_format }}</td>
                     <td>
-                        {% if donor.how == 1 %}
-                            <div>Čuo/la sam na televiziji</div>
-                        {% elseif donor.how == 2 %}
-							<div>Saznao/la preko društvenih mreža</div>
-                        {% elseif donor.how == 3 %}
-							<div>Preko člana porodice/prijatelja</div>
-                        {% elseif donor.how == 4 %}
-							<div>Preko news portala / foruma / Reditta</div>
-                        {% elseif donor.how == 5 %}
-							<div>Preko škole, fakulteta…</div>
+                        {% if donor.comesFrom %}
+                            {{donor.comesFrom|comes_from|raw}}
                         {% else %}
-							-
+                            -
                         {% endif %}
                     </td>
                     <td class="whitespace-nowrap">{{ donor.updatedAt|date('H:i d.m.Y.') }}</td>

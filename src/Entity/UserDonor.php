@@ -11,6 +11,20 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class UserDonor
 {
+    public const COMES_FROM_TV = 1;
+    public const COMES_FROM_SOCIAL = 2;
+    public const COMES_FROM_FAMILY = 3;
+    public const COMES_FROM_NEWS = 4;
+    public const COMES_FROM_SCHOOL = 5;
+
+    public const COMES_FROM = [
+        self::COMES_FROM_TV => 'ComesFromTV',
+        self::COMES_FROM_SOCIAL => 'ComesFromSocial',
+        self::COMES_FROM_FAMILY => 'ComesFromFamily',
+        self::COMES_FROM_NEWS => 'ComesFromNews',
+        self::COMES_FROM_SCHOOL => 'ComesFromSchool',
+    ];
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -27,7 +41,7 @@ class UserDonor
     private ?int $amount = null;
     
     #[ORM\Column(nullable: true)]
-    private ?int $how = null;
+    private ?int $comesFrom = null;
     
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
@@ -79,14 +93,14 @@ class UserDonor
         return $this;
     }
 
-    public function getHow(): ?int
+    public function getComesFrom(): ?int
     {
-        return $this->how;
+        return $this->comesFrom;
     }
 
-    public function setHow(?int $how): static
+    public function setComesFrom(?int $comesFrom): static
     {
-        $this->how = $how;
+        $this->comesFrom = $comesFrom;
 
         return $this;
     }

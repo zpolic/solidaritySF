@@ -40,15 +40,9 @@ class DonorEditType extends AbstractType
                     'min' => 500,
                 ],
             ])
-            ->add('how', ChoiceType::class, [
+            ->add('comesFrom', ChoiceType::class, [
                 'required' => false,
-                'choices' => [
-                    'Čuo/la sam na televiziji' => 1,
-                    'Saznao/la preko društvenih mreža' => 2,
-                    'Preko člana porodice/prijatelja' => 3,
-                    'Preko news portala / foruma / Reditta' => 4,
-                    'Preko škole, fakulteta…' => 5,
-                ],
+                'choices' => array_flip(UserDonor::COMES_FROM),
                 'label' => 'Kako ste saznali za Mrežu Solidarnosti?',
             ])
             ->add('submit', SubmitType::class, [

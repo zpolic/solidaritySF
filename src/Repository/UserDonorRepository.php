@@ -139,13 +139,13 @@ class UserDonorRepository extends ServiceEntityRepository
                 ->setParameter('email', '%'.$criteria['email'].'%');
         }
 
-        if (!empty($criteria['how'])) {
+        if (!empty($criteria['comesFrom'])) {
             
-            if($criteria['how'] == -1) {
-                $qb->andWhere('ud.how is NULL');    
+            if($criteria['comesFrom'] == -1) {
+                $qb->andWhere('ud.comesFrom is NULL');    
             } else {
-                $qb->andWhere('ud.how = :how')
-                ->setParameter('how', $criteria['how']);
+                $qb->andWhere('ud.comesFrom = :comesFrom')
+                ->setParameter('comesFrom', $criteria['comesFrom']);
             }
             
         }
