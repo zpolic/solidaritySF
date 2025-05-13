@@ -51,10 +51,15 @@
             </div>
 
             <div>
-                <div>
+                <div class="grid ">
                     <a href="{{ path('admin_log_list', { 'email': user.email }) }}" class="link link-primary no-underline">
                         <span class="ti ti-archive text-xl relative top-0.5"></span>
                         Lista svih izmena
+                    </a>
+
+                    <a href="{{ path('admin_transaction_list', { 'donor': user.email }) }}" class="link link-primary no-underline">
+                        <span class="ti ti-credit-card-pay text-xl relative top-0.5"></span>
+                        Lista svih transakcija
                     </a>
                 </div>
             </div>
