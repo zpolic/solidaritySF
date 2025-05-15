@@ -39,8 +39,8 @@ TransactionCancelled: Otkazana
 DamagedEducatorNew: Aktivan
 DamagedEducatorDeleted: Obrisan
 
-ComesFromTV: Čuo/la sam na televiziji
-ComesFromSocial: Saznao/la preko društvenih mreža
-ComesFromFamily: Preko člana porodice/prijatelja
-ComesFromNews: Preko news portala / foruma / Reditta
-ComesFromSchool: Preko škole, fakulteta…
+UserDonorComesFromTV: Čuo/la sam na televiziji
+UserDonorComesFromSocial: Saznao/la preko društvenih mreža
+UserDonorComesFromFamily: Preko člana porodice/prijatelja
+UserDonorComesFromNews: Preko news portala / foruma / Reditta
+UserDonorComesFromSchool: Preko škole, fakulteta…

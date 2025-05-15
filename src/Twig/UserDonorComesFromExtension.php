@@ -7,7 +7,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-class ComesFromExtension extends AbstractExtension
+class UserDonorComesFromExtension extends AbstractExtension
 {
     public function __construct(private TranslatorInterface $translator)
     {
@@ -16,7 +16,7 @@ class ComesFromExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('comes_from', [$this, 'getComesFrom']),
+            new TwigFilter('user_donor_comes_from', [$this, 'getComesFrom']),
         ];
     }
 

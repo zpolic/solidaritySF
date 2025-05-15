@@ -18,11 +18,11 @@ class UserDonor
     public const COMES_FROM_SCHOOL = 5;
 
     public const COMES_FROM = [
-        self::COMES_FROM_TV => 'ComesFromTV',
-        self::COMES_FROM_SOCIAL => 'ComesFromSocial',
-        self::COMES_FROM_FAMILY => 'ComesFromFamily',
-        self::COMES_FROM_NEWS => 'ComesFromNews',
-        self::COMES_FROM_SCHOOL => 'ComesFromSchool',
+        self::COMES_FROM_TV => 'UserDonorComesFromTV',
+        self::COMES_FROM_SOCIAL => 'UserDonorComesFromSocial',
+        self::COMES_FROM_FAMILY => 'UserDonorComesFromFamily',
+        self::COMES_FROM_NEWS => 'UserDonorComesFromNews',
+        self::COMES_FROM_SCHOOL => 'UserDonorComesFromSchool',
     ];
     
     #[ORM\Id]

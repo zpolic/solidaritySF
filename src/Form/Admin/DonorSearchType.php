@@ -14,9 +14,6 @@ class DonorSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $comesFrom = array_flip(UserDonor::COMES_FROM);
-        $comesFromExtended = array('-' => -1) + $comesFrom;
-        
         $builder
             ->setMethod('GET')
             ->add('firstName', TextType::class, [
@@ -42,7 +39,8 @@ class DonorSearchType extends AbstractType
             ->add('comesFrom', ChoiceType::class, [
                 'required' => false,
                 'multiple' => false,
-                'choices' => $comesFromExtended,
+                'placeholder' => '',
+                'choices' => array_flip(UserDonor::COMES_FROM),
                 'label' => 'Kako ste saznali za Mrežu solidarnosti?',
             ])
             ->add('submit', SubmitType::class, [

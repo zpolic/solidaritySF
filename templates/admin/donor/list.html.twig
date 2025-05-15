@@ -60,7 +60,7 @@
                     <td>{{ donor.amount|number_format }}</td>
                     <td>
                         {% if donor.comesFrom %}
-                            {{donor.comesFrom|comes_from|raw}}
+                            {{donor.comesFrom|user_donor_comes_from|raw}}
                         {% else %}
                             -
                         {% endif %}
