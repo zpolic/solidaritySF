@@ -66,6 +66,12 @@ class Transaction
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $userDonorFirstName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $userDonorLastName = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -269,5 +275,38 @@ class Transaction
     public function getStatusConfirmed(): int
     {
         return self::STATUS_CONFIRMED;
+    }
+
+    public function getUserDonorFirstName(): ?string
+    {
+        return $this->userDonorFirstName;
+    }
+
+    public function setUserDonorFirstName(?string $userDonorFirstName): static
+    {
+        $this->userDonorFirstName = $userDonorFirstName;
+
+        return $this;
+    }
+
+    public function getUserDonorLastName(): ?string
+    {
+        return $this->userDonorLastName;
+    }
+
+    public function setUserDonorLastName(?string $userDonorLastName): static
+    {
+        $this->userDonorLastName = $userDonorLastName;
+
+        return $this;
+    }
+
+    public function getUserDonorFullName(): string
+    {
+        if ($this->userDonorFirstName && $this->userDonorLastName) {
+            return $this->userDonorFirstName.' '.$this->userDonorLastName;
+        }
+
+        return '-';
     }
 }
