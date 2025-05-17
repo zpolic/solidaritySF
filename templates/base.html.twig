@@ -46,8 +46,8 @@
         <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css"/>
 
-        {% if UMAMI_TRACKING_ID is not empty %}
-            <script defer src="https://stats.uikraft.com/script.js" data-website-id="{{ UMAMI_TRACKING_ID }}"></script>
+        {% if UMAMI_TRACKING_SCRIPT is not empty and UMAMI_TRACKING_ID is not empty %}
+            <script defer src="{{ UMAMI_TRACKING_SCRIPT }}" data-website-id="{{ UMAMI_TRACKING_ID }}"></script>
         {% endif %}
 
         <link href="{{ asset('stylesheet/general.css') }}" rel="stylesheet" type="text/css" />
