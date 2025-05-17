@@ -27,17 +27,21 @@
                             <tr>
                                 <th>
                                     <span class="ti ti-user text-xl"></span>
-                                    Ime
+                                    Ime oštećenog
                                 </th>
                                 <th>
+                                    <span class="ti ti-user-heart text-xl"></span>
+                                    Ime donatora
+                                </th>
+                                <th>Poziv na broj</th>
+                                <th>
                                     <span class="ti ti-credit-card text-xl"></span>
-                                    Broj računa
+                                    Broj računa oštećenog
                                 </th>
                                 <th>
                                     <span class="ti ti-cash text-xl"></span>
                                     Iznos
                                 </th>
-                                <th>Poziv na broj</th>
                                 <th>
                                     Status
 
@@ -60,9 +64,10 @@
                                         {{ transaction.damagedEducator.name }}
                                     </a>
                                 </td>
+                                <td>{{ transaction.userDonorFullName }}</td>
+                                <td>{{ transaction.referenceCode }}</td>
                                 <td class="whitespace-nowrap">{{ transaction.accountNumber|account_number_format }}</td>
                                 <td>{{ transaction.amount|number_format }}</td>
-                                <td>{{ transaction.referenceCode }}</td>
                                 <td>
                                     <div class="whitespace-nowrap">{{ transaction.status|transaction_status|raw }}</div>
                                     <div class="text-gray-500 min-w-[200px] break-words whitespace-normal">
@@ -87,7 +92,7 @@
                             </tr>
                         {% endfor %}
                         <tr>
-                            <td colspan="6"></td>
+                            <td colspan="7"></td>
                             <td>
                                 <a href="#" class="btn btn-primary whitespace-nowrap js-saveAll info-step3">
                                     <span class="ti ti-check text-xl"></span>

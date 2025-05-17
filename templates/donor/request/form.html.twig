@@ -72,6 +72,19 @@
                     {{ form_errors(form) }}
 
                     <div>
+                        {{ form_label(form.firstName) }}
+                        {{ form_widget(form.firstName, { 'attr': { 'class': 'input input-md input-bordered rounded-md w-full' } }) }}
+                        {{ form_errors(form.firstName) }}
+                        <span class="text-gray-500 text-sm">Ime i prezime su nam potrebni zbog provere vaših uplata ka oštećenim nastavnicima.</span>
+                    </div>
+
+                    <div>
+                        {{ form_label(form.lastName) }}
+                        {{ form_widget(form.lastName, { 'attr': { 'class': 'input input-md input-bordered rounded-md w-full' } }) }}
+                        {{ form_errors(form.lastName) }}
+                    </div>
+
+                    <div>
                         {{ form_label(form.email) }}
                         {{ form_widget(form.email, { 'attr': { 'class': 'input input-md input-bordered rounded-md w-full' } }) }}
                         {{ form_errors(form.email) }}
@@ -91,7 +104,7 @@
 
                     <div>
                         {{ form_label(form.isMonthly) }}
-                        {{ form_widget(form.isMonthly, { 'attr': { 'class': 'checkbox checkbox-primary' } }) }}
+                        {{ form_widget(form.isMonthly, { 'attr': { 'class': 'checkbox' } }) }}
                         {{ form_errors(form.isMonthly) }}
 
                         <div class="text-gray-500 text-sm">Čekiranjem ove opcije prihvatate mesečno izdvajanje dogovorenog iznosa (Kasnije se može promeniti).</div>
