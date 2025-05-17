@@ -21,6 +21,12 @@ class TransactionEditType extends AbstractType
                 'data' => $options['data']->getUser()?->getEmail(),
                 'label' => 'Donator',
             ])
+            ->add('userDonorFullName', TextType::class, [
+                'disabled' => true,
+                'mapped' => false,
+                'data' => $options['data']->getUserDonorFullName(),
+                'label' => 'Ime donatora',
+            ])
             ->add('damagedEducator', TextType::class, [
                 'disabled' => true,
                 'mapped' => false,

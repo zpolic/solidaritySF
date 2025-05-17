@@ -24,6 +24,10 @@
                         Donator
                     </th>
                     <th>
+                        <span class="ti ti-user-heart text-xl"></span>
+                        Ime donatora
+                    </th>
+                    <th>
                         <span class="ti ti-school text-xl"></span>
                         Oštećeni/a
                     </th>
@@ -38,6 +42,10 @@
                     <th>
                         <span class="ti ti-calendar-event text-xl"></span>
                         Kreirano
+                    </th>
+                    <th>
+                        <span class="ti ti-calendar-event text-xl"></span>
+                        Poslednja izmena
                     </th>
                     <th>Donator je potvrdio uplatu?</th>
                     <th>
@@ -61,6 +69,7 @@
                             {{ transaction.user.email }}
                         </a>
                     </td>
+                    <td>{{ transaction.userDonorFullName }}</td>
                     <td>
                         <div>{{ transaction.damagedEducator.name }}</div>
                         <div class="text-gray-500">
@@ -74,6 +83,7 @@
                     <td class="whitespace-nowrap">{{ transaction.accountNumber|account_number_format }}</td>
                     <td>{{ transaction.amount|number_format }}</td>
                     <td class="whitespace-nowrap">{{ transaction.createdAt|date('H:i d.m.Y.') }}</td>
+                    <td class="whitespace-nowrap">{{ transaction.updatedAt|date('H:i d.m.Y.') }}</td>
                     <td>
                         {% if transaction.isUserDonorConfirmed %}
                             <div class="status status-success mb-1"></div>

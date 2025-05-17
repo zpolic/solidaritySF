@@ -137,15 +137,29 @@ class TransactionController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $form = $this->createForm(ProfileTransactionConfirmPaymentType::class);
-        $form->handleRequest($request);
+        $form = $this->createForm(ProfileTransactionConfirmPaymentType::class, null, [
+            'user' => $user,
+        ]);
 
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $firstName = $form->get('firstName')->getData();
+            $lastName = $form->get('lastName')->getData();
+
+            $transaction->setUserDonorFirstName($firstName);
+            $transaction->setUserDonorLastName($lastName);
             $transaction->setStatus(Transaction::STATUS_WAITING_CONFIRMATION);
             $transaction->setUserDonorConfirmed(true);
             $transaction->setStatusComment(null);
             $entityManager->persist($transaction);
             $entityManager->flush();
+
+            if (empty($user->getFirstName()) && empty($user->getLastName())) {
+                $user->setFirstName($firstName);
+                $user->setLastName($lastName);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+            }
 
             $this->addFlash('success', 'Uspešno ste potvrdili uplatu.');
 
