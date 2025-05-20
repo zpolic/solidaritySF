@@ -48,8 +48,8 @@ class CreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->section('Command started at '.date('Y-m-d H:i:s'));
 
-        $schoolTypeId = (int)$input->getOption('schoolTypeId');
-        $schoolId = (int)$input->getOption('schoolId');
+        $schoolTypeId = (int) $input->getOption('schoolTypeId');
+        $schoolId = (int) $input->getOption('schoolId');
 
         $store = new FlockStore();
         $factory = new LockFactory($store);
@@ -147,7 +147,7 @@ class CreateCommand extends Command
 
         $command->run(new ArrayInput([
             '--schoolTypeId' => $schoolTypeId,
-            '--schoolId' => $schoolId
+            '--schoolId' => $schoolId,
         ]), $output);
     }
 
