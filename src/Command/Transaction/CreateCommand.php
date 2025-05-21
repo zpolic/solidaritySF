@@ -9,6 +9,7 @@ use App\Service\CreateTransactionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -47,8 +48,8 @@ class CreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->section('Command started at '.date('Y-m-d H:i:s'));
 
-        $schoolTypeId = $input->getOption('schoolTypeId');
-        $schoolId = $input->getOption('schoolId');
+        $schoolTypeId = (int) $input->getOption('schoolTypeId');
+        $schoolId = (int) $input->getOption('schoolId');
 
         $store = new FlockStore();
         $factory = new LockFactory($store);
@@ -133,9 +134,21 @@ class CreateCommand extends Command
             $this->entityManager->clear();
         }
 
+        $this->processLargeDonors($schoolTypeId, $schoolId, $output);
         $io->success('Command finished at '.date('Y-m-d H:i:s'));
 
         return Command::SUCCESS;
+    }
+
+    private function processLargeDonors(?int $schoolTypeId, ?int $schoolId, OutputInterface $output): void
+    {
+        $commandName = 'app:transaction:create-for-large-amount';
+        $command = $this->getApplication()->find($commandName);
+
+        $command->run(new ArrayInput([
+            '--schoolTypeId' => $schoolTypeId,
+            '--schoolId' => $schoolId,
+        ]), $output);
     }
 
     public function createTransactions(UserDonor $userDonor, int &$donorRemainingAmount, int $damagedEducatorId): int
