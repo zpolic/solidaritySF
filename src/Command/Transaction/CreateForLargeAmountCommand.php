@@ -12,7 +12,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 
@@ -36,17 +35,14 @@ class CreateForLargeAmountCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('schoolTypeId', null, InputOption::VALUE_REQUIRED, 'Process only from this school type')
-            ->addOption('schoolId', null, InputOption::VALUE_REQUIRED, 'Process only from this school');
+            ->addOption('schoolTypeId', null, InputOption::VALUE_OPTIONAL, 'Process only from this school type')
+            ->addOption('schoolId', null, InputOption::VALUE_OPTIONAL, 'Process only from this school');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-        $io->section('Command started at '.date('Y-m-d H:i:s'));
-
-        $schoolTypeId = $input->getOption('schoolTypeId');
-        $schoolId = $input->getOption('schoolId');
+        $schoolTypeId = (int) $input->getOption('schoolTypeId');
+        $schoolId = (int) $input->getOption('schoolId');
 
         $store = new FlockStore();
         $factory = new LockFactory($store);
@@ -56,8 +52,6 @@ class CreateForLargeAmountCommand extends Command
         }
 
         if ($this->createTransactionService->isHoliday()) {
-            $io->success('Today is holiday and we will not create and send transactions');
-
             return Command::SUCCESS;
         }
 
@@ -115,8 +109,6 @@ class CreateForLargeAmountCommand extends Command
                 $this->createTransactionService->sendNewTransactionEmail($userDonor);
             }
         }
-
-        $io->success('Command finished at '.date('Y-m-d H:i:s'));
 
         return Command::SUCCESS;
     }
