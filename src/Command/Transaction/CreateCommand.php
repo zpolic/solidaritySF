@@ -40,7 +40,7 @@ class CreateCommand extends Command
         $this
             ->addArgument('maxDonationAmount', InputArgument::REQUIRED, 'Maximum amount that the donor will send to the damaged educator')
             ->addOption('schoolTypeId', null, InputOption::VALUE_REQUIRED, 'Process only from this school type')
-            ->addOption('schoolId', null, InputOption::VALUE_REQUIRED, 'Process only from this school');
+            ->addOption('schoolIds', null, InputOption::VALUE_REQUIRED, 'Process only from this schools');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -49,11 +49,11 @@ class CreateCommand extends Command
         $io->section('Command started at '.date('Y-m-d H:i:s'));
 
         $schoolTypeId = (int) $input->getOption('schoolTypeId');
-        $schoolId = (int) $input->getOption('schoolId');
+        $schoolIds = $input->getOption('schoolIds') ? explode(',', $input->getOption('schoolIds')) : [];
 
         $store = new FlockStore();
         $factory = new LockFactory($store);
-        $lock = $factory->createLock($this->getName().$schoolTypeId.$schoolId, 0);
+        $lock = $factory->createLock($this->getName().$schoolTypeId.implode(',', $schoolIds), 0);
         if (!$lock->acquire()) {
             return Command::FAILURE;
         }
@@ -79,7 +79,7 @@ class CreateCommand extends Command
 
         $parameters = [
             'schoolTypeId' => $schoolTypeId,
-            'schoolId' => $schoolId,
+            'schoolIds' => $schoolIds,
         ];
 
         // Get damaged educators
@@ -134,20 +134,20 @@ class CreateCommand extends Command
             $this->entityManager->clear();
         }
 
-        $this->processLargeDonors($schoolTypeId, $schoolId, $output);
+        $this->processLargeDonors($schoolTypeId, $schoolIds, $output);
         $io->success('Command finished at '.date('Y-m-d H:i:s'));
 
         return Command::SUCCESS;
     }
 
-    private function processLargeDonors(?int $schoolTypeId, ?int $schoolId, OutputInterface $output): void
+    private function processLargeDonors(?int $schoolTypeId, array $schoolIds, OutputInterface $output): void
     {
         $commandName = 'app:transaction:create-for-large-amount';
         $command = $this->getApplication()->find($commandName);
 
         $command->run(new ArrayInput([
             '--schoolTypeId' => $schoolTypeId,
-            '--schoolId' => $schoolId,
+            '--schoolIds' => implode(',', $schoolIds),
         ]), $output);
     }
 
