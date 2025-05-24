@@ -44,13 +44,12 @@ class CreateTransactionService
             $queryParameters['schoolTypeId'] = $parameters['schoolTypeId'];
         }
 
-        if (!empty($parameters['schoolId'])) {
-            $queryString .= ' AND de.school_id = :schoolId';
-            $queryParameters['schoolId'] = $parameters['schoolId'];
+        if (!empty($parameters['schoolIds']) && is_array($parameters['schoolIds']) && count($parameters['schoolIds']) === count(array_filter($parameters['schoolIds'], 'is_numeric'))) {
+            $queryString .= ' AND de.school_id IN ('.implode(',', $parameters['schoolIds']).')';
         }
 
         $stmt = $this->entityManager->getConnection()->executeQuery('
-            SELECT de.id, de.period_id, de.account_number, de.amount
+            SELECT de.id, de.period_id, de.account_number, de.amount, de.school_id
             FROM damaged_educator AS de
              INNER JOIN damaged_educator_period AS dep ON dep.id = de.period_id AND dep.processing = 1
              INNER JOIN school AS s ON s.id = de.school_id
