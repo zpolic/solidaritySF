@@ -36,17 +36,17 @@ class CreateForLargeAmountCommand extends Command
     {
         $this
             ->addOption('schoolTypeId', null, InputOption::VALUE_OPTIONAL, 'Process only from this school type')
-            ->addOption('schoolId', null, InputOption::VALUE_OPTIONAL, 'Process only from this school');
+            ->addOption('schoolIds', null, InputOption::VALUE_OPTIONAL, 'Process only from this schools');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $schoolTypeId = (int) $input->getOption('schoolTypeId');
-        $schoolId = (int) $input->getOption('schoolId');
+        $schoolIds = $input->getOption('schoolIds') ? explode(',', $input->getOption('schoolIds')) : [];
 
         $store = new FlockStore();
         $factory = new LockFactory($store);
-        $lock = $factory->createLock($this->getName().$schoolTypeId.$schoolId, 0);
+        $lock = $factory->createLock($this->getName().$schoolTypeId.implode(',', $schoolIds), 0);
         if (!$lock->acquire()) {
             return Command::FAILURE;
         }
@@ -57,7 +57,7 @@ class CreateForLargeAmountCommand extends Command
 
         $parameters = [
             'schoolTypeId' => $schoolTypeId,
-            'schoolId' => $schoolId,
+            'schoolIds' => $schoolIds,
         ];
 
         // Get damaged educators
