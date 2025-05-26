@@ -1,10 +1,11 @@
 
 # Transactions
 #*/10 7-21 * * 1-4 php /var/www/solidaritySF/bin/console app:transaction:create 10000 > /var/www/solidaritySF/var/log/crontab-transaction-create-`date +\%d-\%m-\%Y`.txt
-*/10 7-21 * * 1-4 php /var/www/solidaritySF/bin/console app:transaction:create 60000 --schoolIds=1783,1784,1786,1785 > /var/www/solidaritySF/var/log/crontab-transaction-create-`date +\%d-\%m-\%Y`.txt
+*/10 8-21 * * 1-4 php /var/www/solidaritySF/bin/console app:transaction:create 15000 > /var/www/solidaritySF/var/log/crontab-transaction-create-1-`date +\%d-\%m-\%Y`.txt
+0 7 * * 1-4 php /var/www/solidaritySF/bin/console app:transaction:create 60000 --schoolIds=1783,1784,1786,1785 > /var/www/solidaritySF/var/log/crontab-transaction-create-2-`date +\%d-\%m-\%Y`.txt
 0 * * * * php /var/www/solidaritySF/bin/console app:transaction:expired >> /var/www/solidaritySF/var/log/crontab-transaction-expired-`date +\%d-\%m-\%Y`.txt
-0 7 * * * php /var/www/solidaritySF/bin/console app:transaction:notify-delegates >> /var/www/solidaritySF/var/log/crontab-transaction-notify-delegates-`date +\%d-\%m-\%Y`.txt
-0 7 * * * php /var/www/solidaritySF/bin/console app:transaction:notify-donors >> /var/www/solidaritySF/var/log/crontab-transaction-notify-donors-`date +\%d-\%m-\%Y`.txt
+10 7 * * * php /var/www/solidaritySF/bin/console app:transaction:notify-delegates >> /var/www/solidaritySF/var/log/crontab-transaction-notify-delegates-`date +\%d-\%m-\%Y`.txt
+10 7 * * * php /var/www/solidaritySF/bin/console app:transaction:notify-donors >> /var/www/solidaritySF/var/log/crontab-transaction-notify-donors-`date +\%d-\%m-\%Y`.txt
 
 # Cache
 */10 * * * * php /var/www/solidaritySF/bin/console app:cache-numbers >> /var/www/solidaritySF/var/log/crontab-cache-numbers-`date +\%d-\%m-\%Y`.txt
