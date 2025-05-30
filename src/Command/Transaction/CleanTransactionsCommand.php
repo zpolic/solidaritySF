@@ -3,11 +3,9 @@
 namespace App\Command\Transaction;
 
 use App\Entity\Transaction;
-use App\Entity\User;
 use App\Entity\UserDonor;
 use App\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,7 +14,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 
 #[AsCommand(
     name: 'app:transaction:clean',
@@ -51,7 +48,7 @@ class CleanTransactionsCommand extends Command
             }
 
             foreach ($donors as $donor) {
-                if($donor->isMonthly()){
+                if ($donor->isMonthly()) {
                     continue;
                 }
 
@@ -64,39 +61,39 @@ class CleanTransactionsCommand extends Command
                 $haveNotPaid = false;
                 $transactionsAfterLastPaid = 0;
 
-                foreach($transactions as $transaction){
-                    if($transaction->isUserDonorConfirmed() || $transaction->getStatus() == Transaction::STATUS_CONFIRMED){
+                foreach ($transactions as $transaction) {
+                    if ($transaction->isUserDonorConfirmed() || Transaction::STATUS_CONFIRMED == $transaction->getStatus()) {
                         $sumPaid += $transaction->getAmount();
                         $lastPaidId = $transaction->getId();
                         continue;
                     }
 
-                    if($transaction->getStatus() == Transaction::STATUS_NOT_PAID){
+                    if (Transaction::STATUS_NOT_PAID == $transaction->getStatus()) {
                         $haveNotPaid = true;
                     }
                 }
 
-                foreach($transactions as $transaction){
-                    if($lastPaidId < $transaction->getId()){
-                        $transactionsAfterLastPaid += 1;
+                foreach ($transactions as $transaction) {
+                    if ($lastPaidId < $transaction->getId()) {
+                        ++$transactionsAfterLastPaid;
                     }
                 }
 
-                if($transactionsAfterLastPaid == 0){
+                if (0 == $transactionsAfterLastPaid) {
                     continue;
                 }
 
-                if(!$haveNotPaid){
+                if (!$haveNotPaid) {
                     continue;
                 }
 
-                if(($sumPaid+499) < $donor->getAmount()){
+                if (($sumPaid + 499) < $donor->getAmount()) {
                     continue;
                 }
 
-                $output->writeln('Delete all not paid transactions for '.$donor->getUser()->getEmail() . ' | LastPaidID: ' . $lastPaidId);
+                $output->writeln('Delete all not paid transactions for '.$donor->getUser()->getEmail().' | LastPaidID: '.$lastPaidId);
                 $this->deleteAllNotPaidTransactions($donor, $lastPaidId);
-                $total += 1;
+                ++$total;
             }
         }
 
