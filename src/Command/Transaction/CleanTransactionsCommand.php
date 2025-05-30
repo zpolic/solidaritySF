@@ -103,38 +103,6 @@ class CleanTransactionsCommand extends Command
         return Command::SUCCESS;
     }
 
-    public function getTotalPaid(UserDonor $userDonor): int
-    {
-        $stmt = $this->entityManager->getConnection()->executeQuery('
-            SELECT SUM(t.amount)
-            FROM transaction AS t
-            WHERE t.user_id = :userId
-             AND (t.status = :status OR t.user_donor_confirmed = 1)
-            ', [
-            'userId' => $userDonor->getUser()->getId(),
-            'status' => Transaction::STATUS_CONFIRMED,
-        ]);
-
-        return (int) $stmt->fetchOne();
-    }
-
-    public function haveNotPaidTransactions(UserDonor $userDonor): bool
-    {
-        $stmt = $this->entityManager->getConnection()->executeQuery('
-            SELECT COUNT(*)
-            FROM transaction AS t
-            WHERE t.user_id = :userId
-             AND (t.status = :status1 OR t.status = :status2)
-             AND t.user_donor_confirmed = 0
-            ', [
-            'userId' => $userDonor->getUser()->getId(),
-            'status1' => Transaction::STATUS_NOT_PAID,
-            'status2' => Transaction::STATUS_EXPIRED,
-        ]);
-
-        return (bool) $stmt->fetchOne();
-    }
-
     public function deleteAllNotPaidTransactions(UserDonor $userDonor, int $lastPaidId): void
     {
         $this->entityManager->getConnection()->executeQuery('
