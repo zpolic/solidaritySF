@@ -86,10 +86,10 @@
                     <td class="whitespace-nowrap">{{ transaction.updatedAt|date('H:i d.m.Y.') }}</td>
                     <td>
                         {% if transaction.isUserDonorConfirmed %}
-                            <div class="status status-success mb-1"></div>
+                            <span class="ti ti-circle-check text-xl text-success relative top-0.5"></span>
                             Da
                         {% else %}
-                            <div class="status status-error mb-1"></div>
+                            <span class="ti ti-circle-x text-xl text-error relative top-0.5"></span>
                             Ne
                         {% endif %}
                     </td>
