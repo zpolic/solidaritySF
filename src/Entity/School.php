@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SchoolRepository::class)]
-#[ORM\Index(name: 'idx_processing', columns: ['processing'])]
+#[ORM\Index(name: 'idx_school_processing', columns: ['processing'])]
 #[ORM\HasLifecycleCallbacks]
 class School
 {
