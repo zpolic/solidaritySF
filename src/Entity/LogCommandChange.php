@@ -7,8 +7,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LogCommandChangeRepository::class)]
-#[ORM\Index(name: 'idx_name', columns: ['name'])]
-#[ORM\Index(name: 'idx_entity', columns: ['entity_id', 'entity_name'])]
+#[ORM\Index(name: 'idx_lcc_name', columns: ['name'])]
+#[ORM\Index(name: 'idx_lcc_entity', columns: ['entity_id', 'entity_name'])]
 #[ORM\HasLifecycleCallbacks]
 class LogCommandChange
 {
