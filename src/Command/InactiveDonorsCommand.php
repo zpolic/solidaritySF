@@ -52,6 +52,10 @@ class InactiveDonorsCommand extends Command
 
             foreach ($items as $item) {
                 $userDonor = $this->entityManager->getRepository(UserDonor::class)->find($item['id']);
+                if ($userDonor->getCreatedAt() > new \DateTime('-15 days')) {
+                    continue;
+                }
+
                 if (!$this->haveNotPaidLastTransactions($userDonor)) {
                     continue;
                 }
