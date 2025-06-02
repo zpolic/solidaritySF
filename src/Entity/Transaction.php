@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_account_number', columns: ['account_number', 'status'])]
 #[ORM\Index(name: 'idx_damaged_educator', columns: ['damaged_educator_id', 'status'])]
 #[ORM\Index(name: 'idx_remaining_amount', columns: ['user_id', 'status', 'created_at'])]
+#[ORM\Index(name: 'idx_not_paid', columns: ['user_id', 'status', 'user_donor_confirmed'])]
 #[ORM\Index(name: 'idx_user_total_amount', columns: ['user_id', 'account_number', 'status', 'created_at'])]
 #[ORM\HasLifecycleCallbacks]
 class Transaction
