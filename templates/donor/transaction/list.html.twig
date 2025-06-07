@@ -120,11 +120,7 @@
                                 <td data-label="Poziv na broj" data-copyable>{{ transaction.referenceCode }}</td>
                                 <td data-label="Kreirano">{{ transaction.createdAt|date('d.m.Y.') }}</td>
                                 <td class="min-w-[180px] break-words whitespace-normal" data-label="Status">
-                                    {% if transaction.isStatusNotPaid and transaction.isUserDonorConfirmed %}
-                                        {{ transaction.statusConfirmed|transaction_status|raw }}
-                                    {% else %}
-                                        {{ transaction.status|transaction_status|raw }}
-                                    {% endif %}
+                                    {{ transaction|transaction_status(true)|raw }}
                                 </td>
                                 <td class="whitespace-nowrap" data-label="">
                                     <div class="flex flex-col gap-4 md:flex-row md:gap-2 justify-end">
