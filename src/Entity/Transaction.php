@@ -23,6 +23,7 @@ class Transaction
     public const STATUS_CANCELLED = 4;
     public const STATUS_NOT_PAID = 5;
     public const STATUS_EXPIRED = 6;
+    public const STATUS_PAID = 7;
 
     public const STATUS = [
         self::STATUS_NEW => 'TransactionWaitingPayment',
@@ -31,6 +32,7 @@ class Transaction
         self::STATUS_NOT_PAID => 'TransactionNotPaid',
         self::STATUS_CONFIRMED => 'TransactionConfirmed',
         self::STATUS_CANCELLED => 'TransactionCancelled',
+        self::STATUS_PAID => 'TransactionPaid',
     ];
 
     #[ORM\Id]
