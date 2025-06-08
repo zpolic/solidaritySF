@@ -66,7 +66,7 @@ class UserDelegateRequestSearchType extends AbstractType
                         ->innerJoin(UserDelegateRequest::class, 'udr', 'WITH', 'udr.school = c')
                         ->groupBy('c.id')
                         ->orderBy('c.name', 'ASC');
-                }
+                },
             ])
             ->add('status', ChoiceType::class, [
                 'required' => false,
