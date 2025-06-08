@@ -35,6 +35,7 @@ TransactionExpired: Istekla
 TransactionNotPaid: Uplata nije primljena
 TransactionConfirmed: Uplata potvrđena
 TransactionCancelled: Otkazana
+TransactionPaid: Izvršena
 
 DamagedEducatorNew: Aktivan
 DamagedEducatorDeleted: Obrisan
