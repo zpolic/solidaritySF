@@ -31,20 +31,20 @@
                 <div>
                     Aktivan:
                     {% if user.isActive %}
-                        <span class="ti ti-circle-check-filled text-xl text-success relative top-0.5"></span>
+                        <span class="ti ti-circle-check text-xl text-success relative top-0.5"></span>
                         Da
                     {% else %}
-                        <span class="ti ti-circle-x-filled text-xl text-error relative top-0.5"></span>
+                        <span class="ti ti-circle-x text-xl text-error relative top-0.5"></span>
                         Ne
                     {% endif %}
                 </div>
                 <div>
                     Potvrđen email:
                     {% if user.isEmailVerified %}
-                        <span class="ti ti-circle-check-filled text-xl text-success relative top-0.5"></span>
+                        <span class="ti ti-circle-check text-xl text-success relative top-0.5"></span>
                         Da
                     {% else %}
-                        <span class="ti ti-circle-x-filled text-xl text-error relative top-0.5"></span>
+                        <span class="ti ti-circle-x text-xl text-error relative top-0.5"></span>
                         Ne
                     {% endif %}
                 </div>
@@ -85,10 +85,10 @@
                     <div>
                         Mesečna podrška:
                         {% if user.userDonor.isMonthly %}
-                            <span class="ti ti-circle-check-filled text-xl text-success relative top-0.5"></span>
+                            <span class="ti ti-circle-check text-xl text-success relative top-0.5"></span>
                             Da
                         {% else %}
-                            <span class="ti ti-circle-x-filled text-xl text-error relative top-0.5"></span>
+                            <span class="ti ti-circle-x text-xl text-error relative top-0.5"></span>
                             Ne
                         {% endif %}
                     </div>

@@ -52,7 +52,7 @@ class CreateTransactionService
             SELECT de.id, de.period_id, de.account_number, de.amount, de.school_id
             FROM damaged_educator AS de
              INNER JOIN damaged_educator_period AS dep ON dep.id = de.period_id AND dep.processing = 1
-             INNER JOIN school AS s ON s.id = de.school_id
+             INNER JOIN school AS s ON s.id = de.school_id AND s.processing = 1
              INNER JOIN school_type AS st ON st.id = s.type_id
              '.$queryString.'
             ', $queryParameters);
