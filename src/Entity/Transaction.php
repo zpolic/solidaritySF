@@ -225,6 +225,11 @@ class Transaction
         return self::STATUS_NOT_PAID === $this->status;
     }
 
+    public function isStatusConfirmed(): bool
+    {
+        return self::STATUS_CONFIRMED === $this->status;
+    }
+
     public function isMaskInformation(): bool
     {
         if (self::STATUS_NOT_PAID && $this->isUserDonorConfirmed()) {
