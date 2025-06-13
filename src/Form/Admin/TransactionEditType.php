@@ -46,7 +46,6 @@ class TransactionEditType extends AbstractType
                 'label' => 'Broj računa',
             ])
             ->add('amount', TextType::class, [
-                'disabled' => true,
                 'label' => 'Iznos',
             ])
             ->add('status', ChoiceType::class, [

@@ -3,9 +3,17 @@
 {% block body %}
     <p>Zdravo,</p>
 
-    <div>Postoje instrukcije za uplatu koje čekaju Vašu proveru, molimo Vas da uđete na Vas profil i proverite instrukcije.</div>
+    <div>molimo te da nam pomogneš da zahvalimo donatorima - potvrdi pristigle uplate što pre.</div>
 
     <div>
-        <i>Sve instrukcije možeš da vidiš na stranici "<a href="https://mrezasolidarnosti.org{{ path('delegate_damaged_educator_choose_period') }}">Spisak svih instrukcija za proveru</a>" koja se nalazi unutar svakog perioda.</i>
+        <div>Kako da to uradiš:</div>
+        <ul>
+            <li><a href="https://mrezasolidarnosti.org{{ path('login') }}">Prijavi</a> se na svoj profil</li>
+            <li>Otvori stranicu "<a href="https://mrezasolidarnosti.org{{ path('delegate_damaged_educator_choose_period') }}">Spisak svih instrukcija za proveru</a>"</li>
+            <li>Za svaku uplatu označi status: "Uplata potvrđena" ili "Uplata nije primljena".</li>
+            <li>Time ste javili donatoru povratnu informaciju i zahvalili mu se.</li>
+        </ul>
     </div>
+
+    <div>Napomena: Ovo je važno i u interesu samih oštećenih nastavnika – dok se postojeće transakcije ne označe kao uplaćene ili neuplaćene, nove transakcije im neće biti dodeljivane.</div>
 {% endblock %}
