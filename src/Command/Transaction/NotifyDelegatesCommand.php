@@ -89,7 +89,7 @@ class NotifyDelegatesCommand extends Command
         $message = (new TemplatedEmail())
             ->to($user->getEmail())
             ->from(new Address('delegati@mrezasolidarnosti.org', 'Mreža Solidarnosti'))
-            ->subject('Postoje instrukcije za uplatu koje treba potvrditi')
+            ->subject('Potvrdi uplate što pre')
             ->htmlTemplate('email/transaction-notify-delegate.html.twig');
 
         try {
