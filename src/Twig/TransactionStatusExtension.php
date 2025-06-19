@@ -24,7 +24,7 @@ class TransactionStatusExtension extends AbstractExtension
     {
         if ($value instanceof Transaction) {
             $status = $value->getStatus();
-            if ($isDonorView && ($value->isUserDonorConfirmed() || $value->isStatusConfirmed())) {
+            if ($isDonorView && ($value->isUserDonorConfirmed() && in_array($status, [Transaction::STATUS_CONFIRMED, Transaction::STATUS_NOT_PAID, Transaction::STATUS_WAITING_CONFIRMATION]))) {
                 $status = Transaction::STATUS_PAID;
             }
 
