@@ -24,7 +24,7 @@ class UserDonor
         self::COMES_FROM_NEWS => 'UserDonorComesFromNews',
         self::COMES_FROM_SCHOOL => 'UserDonorComesFromSchool',
     ];
-    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -39,10 +39,10 @@ class UserDonor
 
     #[ORM\Column]
     private ?int $amount = null;
-    
+
     #[ORM\Column(nullable: true)]
     private ?int $comesFrom = null;
-    
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
 

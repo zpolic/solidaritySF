@@ -58,7 +58,7 @@ class UserDonorRepository extends ServiceEntityRepository
 
         if (!empty($criteria['comesFrom'])) {
             $qb->andWhere('ud.comesFrom = :comesFrom')
-                ->setParameter('comesFrom', $criteria['comesFrom']);         
+                ->setParameter('comesFrom', $criteria['comesFrom']);
         }
 
         // Set the sorting

@@ -2,12 +2,12 @@
 
 namespace App\Tests\Form\Admin;
 
+use App\Entity\UserDonor;
 use App\Form\Admin\DonorSearchType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Test\TypeTestCase;
-use App\Entity\UserDonor;
 
 class DonorSearchTypeTest extends TypeTestCase
 {
@@ -52,7 +52,7 @@ class DonorSearchTypeTest extends TypeTestCase
         // Check that the form data was mapped correctly
         $this->assertEquals($formData, $form->getData());
     }
-    
+
     public function testSubmitValidData2(): void
     {
         $formData = [
@@ -62,18 +62,18 @@ class DonorSearchTypeTest extends TypeTestCase
             'comesFrom' => UserDonor::COMES_FROM_TV,
             'email' => null,
         ];
-        
+
         $form = $this->factory->create(DonorSearchType::class);
-        
+
         // Submit the form with test data
         $form->submit($formData);
-        
+
         $this->assertTrue($form->isSynchronized());
-        
+
         // Check that the form data was mapped correctly
         $this->assertEquals($formData, $form->getData());
     }
-    
+
     public function testConfigureOptions(): void
     {
         $form = $this->factory->create(DonorSearchType::class);

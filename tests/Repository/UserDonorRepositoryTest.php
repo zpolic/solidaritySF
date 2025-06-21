@@ -60,7 +60,7 @@ class UserDonorRepositoryTest extends KernelTestCase
         // Test search with comesFrom criteria
         $result = $userDonorRepository->search(['comesFrom' => UserDonor::COMES_FROM_TV]);
         $this->assertEquals(UserDonor::COMES_FROM_TV, $result['items'][0]->getComesFrom());
-        
+
         // Test pagination
         $result = $userDonorRepository->search([], 1, 1);
         $this->assertCount(1, $result['items']);

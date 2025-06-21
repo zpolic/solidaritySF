@@ -23,7 +23,7 @@ class UserDonorFixtures extends Fixture implements FixtureGroupInterface
         'Zajedno smo jači!',
         null,
     ];
-    
+
     private array $howDidYouHear = [1, 2, 3, 4, 5, null];
 
     public function load(ObjectManager $manager): void
